@@ -78,7 +78,7 @@ login.addEventListener("click", async function(){
 function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (screenWidth <= 768) {
-        window.location.href = "/Admin121722/404/Admin404Page.html";
+        window.location.href = "/AzilRotoni/KristaDominica/Admin121722/404/Admin404Page.html";
     }
 }
 window.onload = checkScreenWidth;
