@@ -40,10 +40,17 @@ login.addEventListener("click", async function(){
         }
     })
     if(!userfound){
-        alert("Wrong Username or Password");
+        const alertContainer = document.getElementById('alertContainer');
+        const alertContent = document.getElementById('alertContent');
+        const closeAlertButton = document.getElementById('closeAlert');
 
+        alertContent.textContent = "Wrong Username or Password";
+        alertContainer.style.bottom = '20px';
+        alertContainer.classList.remove('hidden');
+
+        closeAlertButton.addEventListener('click', closeAlert);
         setTimeout(() => {
-            document.querySelector('.alert').style.display = 'none'
+            closeAlert();
         }, 5000);
     }else {
         let adminDocRef = doc(firestore, "Admin", adminID);
@@ -86,4 +93,12 @@ showPassword.addEventListener("click", function(){
     });
 })
 
-
+// Function to close the alert
+function closeAlert() {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.style.bottom = '-100px';
+    setTimeout(() => {
+        alertContainer.classList.add('hidden');
+    }, 500);
+    
+}
