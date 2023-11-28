@@ -114,8 +114,8 @@ function checkScreenWidth() {
         window.location.href = "/AzilRotoni/KristaDominica/Admin121722/404/Admin404Page.html";
     }
 }
-window.onload = checkScreenWidth;
-window.addEventListener("resize", checkScreenWidth);
+// window.onload = checkScreenWidth;
+// window.addEventListener("resize", checkScreenWidth);
 
 //Show Password
 const showPassword = document.getElementById("isShowPassword")
