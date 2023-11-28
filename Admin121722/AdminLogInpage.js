@@ -1,6 +1,11 @@
-//FIREBASE
+/*
+===========================================================================================================
+    FIREBASE: Teacher-KD
+===========================================================================================================
+*/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"; //App
 import { getFirestore, collection, getDoc, getDocs, doc} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js"; //Authentication
 
 //Initialize Web App and Database
 const firebaseConfig = {
@@ -12,24 +17,33 @@ const firebaseConfig = {
     appId: "1:671675614820:web:8d5d0a0eab4a982660c171",
     measurementId: "G-5WQHME8RBY"
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
+/*
+===========================================================================================================
+    EVENT-DRIVEN
+===========================================================================================================
+*/
 
-//var for Database and Firestore
-const CollectionOfInput = collection(firestore, "Admin")
+//LOG IN INFORMATION USING FIREBASE
 
-//LOG IN INFORMATION
+
+const formBox = document.querySelector('.form .box');
+let usernameTexrField = document.getElementById("username")
+let passwordTextField = document.getElementById("password")
 const login = document.getElementById("login")
 login.addEventListener("click", async function(){
     let usernameInput = document.getElementById("username").value
     let passwordInput = document.getElementById("password").value
-    let querySnapshot = await getDocs(CollectionOfInput);
+
+    const CollectionOfAdmin = collection(firestore, "Admin")
+    let querySnapshot = await getDocs(CollectionOfAdmin);
     let userfound = false
     let adminID = ""
     
     querySnapshot.forEach((doc) => {
+        
         let data = doc.data()
         let username = data.username
         let password = data.Password
@@ -52,33 +66,51 @@ login.addEventListener("click", async function(){
         setTimeout(() => {
             closeAlert();
         }, 5000);
+
+        formBox.style.boxShadow = '0px 0px 20px 1px #780116';
     }else {
         let adminDocRef = doc(firestore, "Admin", adminID);
         let adminDocSnapshot = await getDoc(adminDocRef);
 
         if (adminDocSnapshot.exists()) {
             const adminData = adminDocSnapshot.data();
+            
+            console.log("First Name:", adminData["First Name"]);
+            console.log("Last Name:", adminData["Last Name"]);
+            console.log("Role:", adminData["Role"]);
+            localStorage.setItem('FirstName', adminData["First Name"])
+            localStorage.setItem('LastName', adminData["Last Name"])
+            localStorage.setItem('Role', adminData["Role"])
 
-            console.log("First Name:", adminData.First_Name);
-            console.log("Role:", adminData.Role);
-
-            window.location.href = "AdminPage.html";
-        } else {
-            console.log("Admin document not found");
+            window.location.href = "/Admin121722/AdminPage.html";
         }
     }
+    document.getElementById("password").type = 'password';
+    document.getElementById("isShowPassword").checked = false;
 })
+//re change the color
+usernameTexrField.addEventListener('focus', function () {
+    formBox.style.boxShadow = '0px 0px 20px 1px #ffbb763f'; 
+});
+passwordTextField.addEventListener('focus', function () {
+    formBox.style.boxShadow = '0px 0px 20px 1px #ffbb763f';
+});
+passwordTextField.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        login.click();
+    }
+});
+formBox.addEventListener('mouseout', function () {
+    formBox.style.boxShadow = '';
+});
 
-/*
-===========================================================================================================
-    EVENT-DRIVEN
-===========================================================================================================
-*/
-// Check screen width and redirect if below 1204px
+
+// Check screen width and redirect if below 768
 function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (screenWidth <= 768) {
-        window.location.href = "/Admin121722/404/Admin404Page.html";
+        localStorage.setItem('currentURL', window.location.href)
+        window.location.href = "../Admin121722/404/Admin404Page.html";
     }
 }
 window.onload = checkScreenWidth;
@@ -100,5 +132,4 @@ function closeAlert() {
     setTimeout(() => {
         alertContainer.classList.add('hidden');
     }, 500);
-    
 }

@@ -3,9 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>DASHBOARD - ADMIN</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="AdminPage.css">
 </head>
 <body>
-    
+    <div id="svg-container">
+        <img src="../Images/start-logo.svg" alt="Logo" draggable="false"/>
+        <h1 id="greet"></h1>
+    </div>
+    <div class="admin-page">
+        <header class="sidebar-container" id="sidebar-container">
+            <div class="weblogo-container">
+                <img src="../Images/logo.svg" alt="Logo" draggable="false"/>
+                <h1 class="sidebar-label">KD AMAD</h1>
+            </div>
+            <div class="side-navbar">
+                <div class="side-navlink-container">
+                    <hr>
+                    <div class="side-navlink">
+                        <img src="../Images/dashboard.svg" alt="Logo" draggable="false"/>
+                        <h3 class="sidebar-label">Dashboard</h3>
+                    </div>
+                    <hr>
+                    <div class="side-navlink" >
+                        <img src="../Images/home.svg" alt="home" draggable="false"/>
+                        <h3 class="sidebar-label" >Home</h3>
+                    </div>
+                    <div class="side-navlink">
+                        <img src="../Images/sharp-class.svg" alt="" draggable="false"/>
+                        <h3 class="sidebar-label">Advisory Class</h3>
+                    </div>
+                    <div class="side-navlink">
+                        <img src="../Images/student.svg" alt="" draggable="false"/>
+                        <h3 class="sidebar-label">Students</h3>
+                    </div>
+                    <div class="side-navlink">
+                        <img src="../Images/database.svg" alt="" draggable="false"/>
+                        <h3 class="sidebar-label">Storage</h3>
+                    </div>
+                </div>
+                <div class="sidebar-navlink-container">
+                    <hr>
+                    <div class="side-navlink" id="log-out">
+                        <img src="../Images/log-out.svg" alt="" draggable="false"/>
+                        <h3 class="sidebar-label">Log Out</h3>
+                    </div>
+                    <div class="toggleSideBar" id="toggleSideBar">
+                        <div class="side-navlink" id="open">
+                            <img src="../Images/right.svg" alt="" draggable="false"/>
+                        </div>
+                        <div class="side-navlink" id="close">
+                            <img src="../Images/left.svg" alt="" draggable="false"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="content">
+            <header class="header">
+                <div>
+                    <h1>ADMIN</h1>
+                </div>
+            </header>
+        </main>
+    </div>
 </body>
+<!-- <script src="Admin-ScriptFirebase.js" type="module"></script> -->
+<script src="AdminPage.js" type="module"></script>
 </html>

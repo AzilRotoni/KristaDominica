@@ -225,6 +225,8 @@ main{
     width: 100%;
     flex: 1;
     overflow: auto;
+    user-select: none;
+    pointer-events: none;
 }
 .card {
     /* background-color: rgba(255, 255, 255, 0.074); */
@@ -314,23 +316,6 @@ main{
       }
 }
 
-@media only screen and (max-width: 1025px) {
-    main{
-        flex-direction: column;
-    }
-    .form-container{
-        justify-content: center;
-        height: auto;
-    }
-    .form .box{
-        height: auto;
-        padding: 2rem 1rem;
-    }
-    .loader{
-        justify-content: center;
-    }
-}
-
 /* ALERT */
 .alert {
     position: fixed;
@@ -389,5 +374,23 @@ main{
 @keyframes spinner-e04l1k {
     100% {
         transform: rotate(1turn);
+    }
+}
+
+/* @MEWDIA 1080px */
+@media only screen and (max-width: 1080px) {
+    main{
+        flex-direction: column;
+    }
+    .form-container{
+        justify-content: center;
+        height: auto;
+    }
+    .form .box{
+        height: auto;
+        padding: 2rem 1rem;
+    }
+    .loader{
+        justify-content: center;
     }
 }

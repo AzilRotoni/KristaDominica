@@ -1,0 +1,213 @@
+/* root */
+:root{
+    --main-color: #0C1B33;
+    --font-color1: #EEF0F2;
+    --font-color2: #ADBBC5;
+    --font-color3: #597DB3;
+    --font-color4: #839CBC;
+    --blue1: #214175;
+    --blue2: #193157;
+    --blue3: #0F1B2E;
+    --blue4: #0A1019;
+    
+}
+::-webkit-scrollbar {
+    width: 0px;
+}
+*{
+    color: white;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: Arial, sans-serif;
+    
+}
+body{
+    background-color: #0C1B33;
+    display: flex;
+    justify-content: center;
+}
+/* START */
+#svg-container, .admin-page {
+    transition: opacity 1s ease-in-out;
+}
+#svg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+#svg-container img {
+    height: 80vh;
+    user-select: none;
+    animation: scaleAnimation 3s infinite alternate;
+    color: transparent;
+    background-color: transparent;
+}
+@keyframes scaleAnimation {
+    from {
+        transform: scale(1.1);
+    }
+    to {
+        transform: scale(.9);
+    }
+}
+.admin-page {
+    display: none;
+    transition: opacity 1s ease;
+}
+.show-admin-page #svg-container {
+    opacity: 0;
+}
+.show-admin-page .admin-page {
+    display: flex;
+}
+#greet{
+    font-size: 3rem;
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+#svg-container-hidden{
+    display: none
+}
+
+/* BODY */
+#admin-page{
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    color: var(--font-color3);
+    padding: 0px 10px 30px 10px;
+    width: 300px;
+    height: 100vh;
+    box-shadow: 0px 0px 10px 2px var(--blue4);
+    border: var(--blue4) 1px solid;
+    transition: all 0.5s ease-in-out;
+}
+.weblogo-container {
+    display: flex;
+    align-items: center;
+    height: 80px;   
+    padding: 5px 15px;
+    pointer-events: none;
+}
+.weblogo-container img {
+    width: 60px;
+    margin-right: 10px;
+}
+.weblogo-container h1 {
+    width: 80%;
+    font-size: 1.6rem;
+    user-select: none;
+    transition: all 0.5s ease-in-out;
+}
+.side-navlink-container hr {
+    border: 1px solid var(--blue2);
+}
+.sidebar-navlink-container hr{
+    border: 1px solid var(--blue2);
+}
+.side-navbar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 10px;
+}
+.side-navlink-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+.side-navlink {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+.side-navlink:hover {
+    background-color: #555;
+    border-radius: 20px;
+}
+.side-navlink img {
+    width: 20px;
+    margin-right: 8px;
+}
+.sidebar-label {
+    background-color: transparent;
+    overflow: hidden;
+    display: block;
+    opacity: 1; 
+    transition: opacity 0.5s ease-in-out; 
+    animation: fadeIn 1s ease-in-out;
+}
+.sidebar-label.hide {
+    display: none;
+    opacity: 0;
+    overflow: hidden;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.side-navlink h3, 
+.dashboard h3{
+    overflow: hidden;
+}
+.side-navlink img, 
+.side-navlink h3, 
+.dashboard h3{
+    background-color: transparent;
+    color: var(--font-color1);
+}
+.sidebar-navlink-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#open {
+    display: none;
+}
+
+/* MAIN || Content */
+.content{
+    display: flex;
+    width: 100%;;
+}
+.header{
+    width: 100%;
+    height: 85px;
+    background-color: var(--blue3);
+    border-bottom: var(--blue2) 2px solid;
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: end;
+    padding: 10px 20px;
+}
