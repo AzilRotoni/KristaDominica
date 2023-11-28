@@ -111,6 +111,7 @@ function checkScreenWidth() {
     if (screenWidth <= 768) {
         localStorage.setItem('currentURL', window.location.href)
         window.location.href = "../Admin121722/404/Admin404Page.html";
+        window.location.href = "/AzilRotoni/KristaDominica/Admin121722/404/Admin404Page.html";
     }
 }
 window.onload = checkScreenWidth;
