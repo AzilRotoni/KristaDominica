@@ -83,8 +83,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
             document.getElementById('open').style.display = 'none';
             document.getElementById('close').style.display = 'block';
             document.getElementById('greet').textContent = `Hello ${fname} ${lname} !!`;
-            // document.body.classList.add('show-admin-page');//remove
-            // svgContainer.id = 'svg-container-hidden';
         setTimeout(function () {
             svgContainer.id = 'svg-container-hidden';
             document.body.classList.add('show-admin-page');

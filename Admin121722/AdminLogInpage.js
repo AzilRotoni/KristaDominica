@@ -6,7 +6,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"; //App
 import { getFirestore, collection, getDoc, getDocs, doc} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore
 
-
 //Initialize Web App and Database
 const firebaseConfig = {
     apiKey: "AIzaSyAIlhhNKiXBy2stX9HsebtxaDfB-F535LI",
@@ -14,9 +13,10 @@ const firebaseConfig = {
     projectId: "teacher-kd-amad",
     storageBucket: "teacher-kd-amad.appspot.com",
     messagingSenderId: "623162023007",
-    appId: "1:623162023007:web:dd7f6118a43c1b0a038fea",
-    measurementId: "G-8VW1ZR77HP"
+    appId: "1:623162023007:web:85e77a2817419f1e038fea",
+    measurementId: "G-TCZLCT4SX2"
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
@@ -44,7 +44,7 @@ login.addEventListener("click", async function(){
         
         let data = doc.data()
         let username = data.username
-        let password = data.Password
+        let password = data.password
 
         if (usernameInput === username && passwordInput === password ){
             userfound = true
@@ -81,8 +81,6 @@ login.addEventListener("click", async function(){
             sessionStorage.setItem('FirstName', adminData["First Name"])
             sessionStorage.setItem('LastName', adminData["Last Name"])
             sessionStorage.setItem('Role', adminData["Role"])
-
-            // window.location.href = "/AdminPage.html";
             window.location.href = "AdminPage.html";
 
         }
@@ -111,7 +109,7 @@ formBox.addEventListener('mouseout', function () {
 function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (screenWidth <= 768) {
-        localStorage.setItem('currentURL', window.location.href)
+        sessionStorage.setItem('currentURL', window.location.href)
         window.location.href = "404/Admin404Page.html";
     }
 }

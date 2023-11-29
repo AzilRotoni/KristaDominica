@@ -11,13 +11,13 @@ import { getFirestore, collection, getDoc, getDocs, doc} from "https://www.gstat
 
 //Initialize Web App and Database
 const firebaseConfig = {
-    apiKey: "AIzaSyBzLcJDzNngZxCYOZiV5fXxffJgU4C1tZQ",
-    authDomain: "teacker-kd-amad.firebaseapp.com",
-    projectId: "teacker-kd-amad",
-    storageBucket: "teacker-kd-amad.appspot.com",
-    messagingSenderId: "671675614820",
-    appId: "1:671675614820:web:8d5d0a0eab4a982660c171",
-    measurementId: "G-5WQHME8RBY"
+    apiKey: "AIzaSyAIlhhNKiXBy2stX9HsebtxaDfB-F535LI",
+    authDomain: "teacher-kd-amad.firebaseapp.com",
+    projectId: "teacher-kd-amad",
+    storageBucket: "teacher-kd-amad.appspot.com",
+    messagingSenderId: "623162023007",
+    appId: "1:623162023007:web:85e77a2817419f1e038fea",
+    measurementId: "G-TCZLCT4SX2"
 };
 
 //URL for Realtime Database
