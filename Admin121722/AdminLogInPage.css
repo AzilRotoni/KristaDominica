@@ -254,7 +254,6 @@ main{
 .card-container{
     width: 100%;
     flex: 1;
-    overflow: auto;
     user-select: none;
 }
 .card{
@@ -264,7 +263,7 @@ main{
     color: rgb(124, 124, 124);
     font-family: "Poppins", sans-serif;
     font-weight: 600;
-    font-size: clamp(0.9375rem, -2.3733rem + 18.9189vw, 3.125rem);
+    font-size: 3.2rem;
     height: 55px;
     display: flex;
     border-radius: 8px;
@@ -275,7 +274,6 @@ main{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    height: 70px;
 }
 .words::after {
     inset: 0;
@@ -392,7 +390,7 @@ main{
 @media only screen and (max-width: 1080px) {
     main{
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
     }
     .form-container{
         justify-content: center;
@@ -402,9 +400,14 @@ main{
         height: auto;
         padding: 2rem 1rem;
     }
+    .card{
+        margin-bottom: 15px;
+    }
     .loader{
         justify-content: center;
         width: 550px;
+        font-size: 2.8rem;
+        border-bottom: 2px solid;
     }
     .card{
         display: flex;
