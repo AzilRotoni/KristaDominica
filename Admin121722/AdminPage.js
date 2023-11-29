@@ -77,7 +77,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
             document.body.classList.remove('show-admin-page');
             document.getElementById('open').style.display = 'none';
             document.getElementById('close').style.display = 'block';
-            document.getElementById('greet').textContent = `Hello ${fname} ${lname} !!`;
+            if(fname !== null){
+                document.getElementById('greet').textContent = `Hello ${fname} ${lname} !!`;
+            }
+
         setTimeout(function () {
             svgContainer.id = 'svg-container-hidden';
             document.body.classList.add('show-admin-page');
