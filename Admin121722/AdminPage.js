@@ -22,6 +22,50 @@ const firestore = getFirestore(app);
 document.addEventListener('DOMContentLoaded', function (e) {
     e.preventDefault
 
+    //Page 404
+    document.getElementById('page-404').style.display = 'none'
+
+    // Load the Animated SVG
+    let fname = sessionStorage.getItem('FirstName')
+    let lname = sessionStorage.getItem('LastName')
+    let role = sessionStorage.getItem('Role')
+    document.getElementById('open').style.display = 'none';
+    document.getElementById('close').style.display = 'block';
+    document.getElementById("role").textContent = `${role}:`
+    document.getElementById("role-fName").textContent = `${fname}`
+    let animationShown = sessionStorage.getItem('animationShown');
+
+    if (!animationShown) {
+        showAdminPage(fname, lname);
+    } else {
+        simulateAdminLogin();
+    }
+    let AdminPage = document.getElementById('admin-page');
+    function simulateAdminLogin() {
+        let svgContainer = document.getElementById('svg-container');
+        svgContainer.id = 'svg-container-hidden';
+        let AdminPage = document.getElementById('admin-page');
+        AdminPage.classList = 'show-admin-page';
+    }
+    function showAdminPage(fname, lname) {
+        let svgContainer = document.getElementById('svg-container');
+        sessionStorage.setItem('animationShown', 'true');
+        
+        if(svgContainer){
+            svgContainer.id = 'svg-container';
+            document.getElementById('open').style.display = 'none';
+            document.getElementById('close').style.display = 'block';
+            if(fname !== null){
+                document.getElementById('greet').textContent = `Hello ${fname} ${lname} !!`;
+            }
+
+        setTimeout(function () {
+            svgContainer.id = 'svg-container-hidden';
+            AdminPage.classList = 'show-admin-page';
+        }, 2500);
+        }
+    }
+
     //Prevent unwanted users
     if (sessionStorage.getItem('reloaded') === null || sessionStorage.getItem('reloaded') === 'yes') {
         async function checkUserCredentials() {
@@ -32,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         getDocs(q)
             .then((querySnapshot) => {
                 if (querySnapshot.empty) {
+                    sessionStorage.clear()
                     window.location.href = 'index.html';
                 }
             })
@@ -47,47 +92,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }   
     }
     sessionStorage.setItem('reloaded', 'yes');
-
-    // Load the Animated SVG
-    let fname = sessionStorage.getItem('FirstName')
-    let lname = sessionStorage.getItem('LastName')
-    let role = sessionStorage.getItem('Role')
-    document.getElementById('open').style.display = 'none';
-    document.getElementById('close').style.display = 'block';
-    document.getElementById("role").textContent = `${role}:`
-    document.getElementById("role-fName").textContent = `${fname}`
-    let animationShown = sessionStorage.getItem('animationShown');
-
-    if (!animationShown) {
-        showAdminPage(fname, lname, role);
-    } else {
-        simulateAdminLogin();
-    }
-
-    function simulateAdminLogin() {
-        let svgContainer = document.getElementById('svg-container');
-        svgContainer.id = 'svg-container-hidden';
-        document.body.classList.add('show-admin-page');
-    }
-    function showAdminPage(fname, lname, role) {
-        sessionStorage.setItem('animationShown', 'true');
-        
-        let svgContainer = document.getElementById('svg-container');
-        if(svgContainer){
-            document.body.classList.remove('show-admin-page');
-            document.getElementById('open').style.display = 'none';
-            document.getElementById('close').style.display = 'block';
-            if(fname !== null){
-                document.getElementById('greet').textContent = `Hello ${fname} ${lname} !!`;
-            }
-
-        setTimeout(function () {
-            svgContainer.id = 'svg-container-hidden';
-            document.body.classList.add('show-admin-page');
-            
-        }, 2500);
-        }
-    }
 
     //Tool Tip
     const navLinks = document.querySelectorAll(".side-navlink");
@@ -117,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         return tooltip;
     }
     //Navinks Selector
-    showSection('dashboard');
+    showSection('MyStudents'); //dashboard
     navLinks.forEach(link => {
         link.addEventListener('click', function (event) {
             event.preventDefault();
@@ -128,14 +132,61 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     // Title
     document.getElementById('title').textContent = `DASHBOARD - ${role} ${fname}`;
+
+    //===============================================================================================
+    //STUDENTS ======================================================================================
+
+    //List of Students
+
+    const parentDiv = document.getElementById('listOfSection');
+    if (sessionStorage.getItem('reloaded') === 'yes') {
+        let uniqueSections
+            const studentsCollectionRef = collection(firestore, 'MyStudents');
+            getDocs(studentsCollectionRef)
+            .then((querySnapshot) => {
+                uniqueSections = [];
+                querySnapshot.forEach((doc) => {
+                const section = doc.data().Section;
+                if (!uniqueSections.includes(section)) {
+                    uniqueSections.push(section);
+                }
+                });
+                console.log(uniqueSections);
+                uniqueSections.forEach((section) => {
+                    const sectionContainer = document.createElement('div');
+                    sectionContainer.className = 'section-container';
+
+                    const sectionContainerID = section.toLowerCase().replace(/\s+/g, '_');
+                    sectionContainer.id = sectionContainerID;
+
+                    const h2 = document.createElement('h2');
+                    querySnapshot.forEach((doc) => {
+                        if (doc.data().Section === section) {
+                            const grade = doc.data().Grade;
+                            h2.textContent = `G${grade} - ${section}`;
+                        }
+                    });
+                    sectionContainer.appendChild(h2);
+                    parentDiv.appendChild(sectionContainer);
+                });
+            })
+            .catch((error) => {
+                console.error('Error getting documents: ', error);
+            });
+    }
 });
 
 // Check screen width and redirect if below 768
 function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    if (screenWidth <= 768) {
-        sessionStorage.setItem('currentURL', window.location.href)
-        window.location.href = "404/Admin404Page.html";
+    if (screenWidth <= 770) {
+        document.getElementById('Main').style.display = 'none';
+        document.getElementById('page-404').style.display = 'block'
+    }else if(screenWidth <= 770 || !sessionStorage.getItem('animationShown')){
+        document.getElementById('page-404').style.display = 'none'
+    }else{
+        document.getElementById('Main').style.display = 'block';
+        document.getElementById('page-404').style.display = 'none'
     }
 }
 window.onload = checkScreenWidth;

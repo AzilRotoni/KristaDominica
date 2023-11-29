@@ -26,6 +26,14 @@ const firestore = getFirestore(app);
 ===========================================================================================================
 */
 
+document.addEventListener('DOMContentLoaded', function(e){
+    e.preventDefault
+    if (sessionStorage.getItem('reloaded') === null || sessionStorage.getItem('reloaded') !== 'yes') {
+        sessionStorage.clear();
+    }
+
+})
+
 //LOG IN INFORMATION USING FIREBASE
 const formBox = document.querySelector('.form .box');
 let usernameTexrField = document.getElementById("username")
@@ -108,9 +116,14 @@ formBox.addEventListener('mouseout', function () {
 // Check screen width and redirect if below 768
 function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    if (screenWidth <= 768) {
-        sessionStorage.setItem('currentURL', window.location.href)
-        window.location.href = "404/Admin404Page.html";
+    if (screenWidth <= 770) {
+        document.getElementById('page-404').style.display = 'block'
+        document.getElementById('particles-js').style.display = 'none'
+        document.getElementById('main').style.display = 'none'
+    }else{
+        document.getElementById('main').style.display = 'flex'
+        document.getElementById('page-404').style.display = 'none'
+        document.getElementById('particles-js').style.display = 'block'
     }
 }
 window.onload = checkScreenWidth;

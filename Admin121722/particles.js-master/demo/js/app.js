@@ -1,6 +1,4 @@
-particlesJS.load('particles-js', 'particles.js-master/demo/particles.json', function() {
-    console.log('callback - particles.js config loaded');
-  });
+particlesJS.load('particles-js', 'particles.js-master/demo/particles.json', function() {});
 
 particlesJS('particles-js',
   
