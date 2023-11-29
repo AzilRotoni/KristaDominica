@@ -189,8 +189,8 @@ function checkScreenWidth() {
         document.getElementById('page-404').style.display = 'none'
     }
 }
-window.onload = checkScreenWidth;
-window.addEventListener("resize", checkScreenWidth);
+// window.onload = checkScreenWidth;
+// window.addEventListener("resize", checkScreenWidth);
 
 //Toggle Close and Open
 var openButton = document.getElementById('open');
