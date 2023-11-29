@@ -9,52 +9,52 @@
 </head>
 <body>
     <div id="svg-container">
-        <img src="../Images/start-logo.svg" alt="Logo" draggable="false"/>
+        <img src="Images/start-logo.svg" alt="Logo" draggable="false"/>
         <h1 id="greet"></h1>
     </div>
     <div class="admin-page">
         <header class="sidebar-container" id="sidebar-container">
             <div class="weblogo-container">
-                <img src="../Images/logo.svg" alt="Logo" draggable="false"/>
+                <img src="Images/logo.svg" alt="Logo" draggable="false"/>
                 <h1 class="sidebar-label">KD AMAD</h1>
             </div>
             <div class="side-navbar">
                 <div class="side-navlink-container">
                     <hr>
-                    <div class="side-navlink">
-                        <img src="../Images/dashboard.svg" alt="Logo" draggable="false"/>
+                    <div class="side-navlink" data-tooltip="Dashboard">
+                        <img src="Images/dashboard.svg" alt="Logo" draggable="false"/>
                         <h3 class="sidebar-label">Dashboard</h3>
                     </div>
                     <hr>
-                    <div class="side-navlink" >
-                        <img src="../Images/home.svg" alt="home" draggable="false"/>
+                    <div class="side-navlink" data-tooltip="Home">
+                        <img src="Images/home.svg" alt="home" draggable="false"/>
                         <h3 class="sidebar-label" >Home</h3>
                     </div>
-                    <div class="side-navlink">
-                        <img src="../Images/sharp-class.svg" alt="" draggable="false"/>
+                    <div class="side-navlink" data-tooltip="Advisory class">
+                        <img src="Images/sharp-class.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Advisory Class</h3>
                     </div>
-                    <div class="side-navlink">
-                        <img src="../Images/student.svg" alt="" draggable="false"/>
+                    <div class="side-navlink" data-tooltip="studentx">
+                        <img src="Images/student.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Students</h3>
                     </div>
-                    <div class="side-navlink">
-                        <img src="../Images/database.svg" alt="" draggable="false"/>
+                    <div class="side-navlink" data-tooltip="storage">
+                        <img src="Images/database.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Storage</h3>
                     </div>
                 </div>
                 <div class="sidebar-navlink-container">
                     <hr>
-                    <div class="side-navlink" id="log-out">
-                        <img src="../Images/log-out.svg" alt="" draggable="false"/>
+                    <div class="side-navlink" id="log-out" data-tooltip="log out">
+                        <img src="Images/log-out.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Log Out</h3>
                     </div>
                     <div class="toggleSideBar" id="toggleSideBar">
-                        <div class="side-navlink" id="open">
-                            <img src="../Images/right.svg" alt="" draggable="false"/>
+                        <div class="side-navlinks" id="open">
+                            <img src="Images/right.svg" alt="" draggable="false"/>
                         </div>
-                        <div class="side-navlink" id="close">
-                            <img src="../Images/left.svg" alt="" draggable="false"/>
+                        <div class="side-navlinks" id="close">
+                            <img src="Images/left.svg" alt="" draggable="false"/>
                         </div>
                     </div>
                 </div>
@@ -62,10 +62,27 @@
         </header>
         <main class="content">
             <header class="header">
-                <div>
-                    <h1>ADMIN</h1>
+                <div class="admin-name">
+                    <img src="Images/admin-outlined.svg" draggable="false">
+                    <h1 id="role"></h1>
+                    <h1 id="role-fName"></h1>
                 </div>
             </header>
+            <section class="dashboard" display="flex">
+                <div></div>
+            </section>
+            <section class="home" display="flex">
+
+            </section>
+            <section class="advisoryClass" display="flex">
+
+            </section>
+            <section class="Students" display="flex">
+
+            </section>
+            <section class="storage" display="flex">
+
+            </section>
         </main>
     </div>
 </body>

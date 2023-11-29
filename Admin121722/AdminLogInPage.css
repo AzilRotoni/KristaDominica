@@ -70,13 +70,12 @@ main{
     backdrop-filter: blur(30px);
     border-radius: .7rem;
     transition: all ease .3s;
-}
-.form .box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
+
 .form .box .title {
     font-size: clamp(1rem, 0.95rem + 2vw, 1.5rem);
     font-weight: 500;
@@ -226,52 +225,36 @@ main{
     flex: 1;
     overflow: auto;
     user-select: none;
-    pointer-events: none;
 }
-.card {
-    /* background-color: rgba(255, 255, 255, 0.074); */
-    padding: 2rem 0rem;
-    border-radius: 1.25rem;
+.card{
+    padding: 1rem 0rem;
 }
 .loader {
     color: rgb(124, 124, 124);
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-size: clamp(0.9375rem, -2.3733rem + 18.9189vw, 3.125rem);
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    height: 70px;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    height: 55px;
     display: flex;
     border-radius: 8px;
 }
 .words {
     margin-left: 1rem;
     overflow: hidden;
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: 70px;
 }
 .words::after {
-    content: "";
-    position: absolute;
     inset: 0;
-    background: linear-gradient(
-        var(--bg-color) 10%,
-        transparent 30%,
-        transparent 70%,
-        var(--bg-color) 90%
-    );
     z-index: 20;
 }
 .word {
     display: block;
-    height: 100%;
-    padding-left: 6px;
+    height: 55px;
     color: #956afa;
-    animation: spin_4991 6s infinite;
+    animation: spin_4991 10s infinite;
 }
 
 @keyframes spin_4991 {
@@ -350,9 +333,6 @@ main{
     display: flex;
     flex-direction: row;
 }
-.alert.hidden {
-    /* display: none; */
-}
 #spinner {
     width: 40px;
     height: 40px;
@@ -381,6 +361,7 @@ main{
 @media only screen and (max-width: 1080px) {
     main{
         flex-direction: column;
+        gap: 20px;
     }
     .form-container{
         justify-content: center;
@@ -391,6 +372,11 @@ main{
         padding: 2rem 1rem;
     }
     .loader{
+        justify-content: center;
+        width: 550px;
+    }
+    .card{
+        display: flex;
         justify-content: center;
     }
 }

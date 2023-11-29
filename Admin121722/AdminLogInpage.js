@@ -5,7 +5,7 @@
 */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"; //App
 import { getFirestore, collection, getDoc, getDocs, doc} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js"; //Authentication
+
 
 //Initialize Web App and Database
 const firebaseConfig = {
@@ -27,8 +27,6 @@ const firestore = getFirestore(app);
 */
 
 //LOG IN INFORMATION USING FIREBASE
-
-
 const formBox = document.querySelector('.form .box');
 let usernameTexrField = document.getElementById("username")
 let passwordTextField = document.getElementById("password")
@@ -78,11 +76,15 @@ login.addEventListener("click", async function(){
             console.log("First Name:", adminData["First Name"]);
             console.log("Last Name:", adminData["Last Name"]);
             console.log("Role:", adminData["Role"]);
-            localStorage.setItem('FirstName', adminData["First Name"])
-            localStorage.setItem('LastName', adminData["Last Name"])
-            localStorage.setItem('Role', adminData["Role"])
+            console.log("username:", adminData["username"]);
+            sessionStorage.setItem('username', adminData["username"])
+            sessionStorage.setItem('FirstName', adminData["First Name"])
+            sessionStorage.setItem('LastName', adminData["Last Name"])
+            sessionStorage.setItem('Role', adminData["Role"])
 
-            window.location.href = "/Admin121722/AdminPage.html";
+            // window.location.href = "/AdminPage.html";
+            window.location.href = "AdminPage.html";
+
         }
     }
     document.getElementById("password").type = 'password';
@@ -110,12 +112,11 @@ function checkScreenWidth() {
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (screenWidth <= 768) {
         localStorage.setItem('currentURL', window.location.href)
-        window.location.href = "../Admin121722/404/Admin404Page.html";
-        window.location.href = "/AzilRotoni/KristaDominica/Admin121722/404/Admin404Page.html";
+        window.location.href = "404/Admin404Page.html";
     }
 }
-// window.onload = checkScreenWidth;
-// window.addEventListener("resize", checkScreenWidth);
+window.onload = checkScreenWidth;
+window.addEventListener("resize", checkScreenWidth);
 
 //Show Password
 const showPassword = document.getElementById("isShowPassword")
