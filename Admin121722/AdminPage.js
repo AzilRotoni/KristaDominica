@@ -2,13 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebas
 import { collection, getFirestore, query, where, getDocs} from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore//
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBzLcJDzNngZxCYOZiV5fXxffJgU4C1tZQ",
-    authDomain: "teacker-kd-amad.firebaseapp.com",
-    projectId: "teacker-kd-amad",
-    storageBucket: "teacker-kd-amad.appspot.com",
-    messagingSenderId: "671675614820",
-    appId: "1:671675614820:web:8d5d0a0eab4a982660c171",
-    measurementId: "G-5WQHME8RBY"
+    apiKey: "AIzaSyAIlhhNKiXBy2stX9HsebtxaDfB-F535LI",
+    authDomain: "teacher-kd-amad.firebaseapp.com",
+    projectId: "teacher-kd-amad",
+    storageBucket: "teacher-kd-amad.appspot.com",
+    messagingSenderId: "623162023007",
+    appId: "1:623162023007:web:dd7f6118a43c1b0a038fea",
+    measurementId: "G-8VW1ZR77HP"
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
