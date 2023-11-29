@@ -23,6 +23,7 @@
     font-family: Arial, sans-serif;
     
 }
+
 body{
     background-color: #0C1B33;
     display: flex;
@@ -223,8 +224,14 @@ body{
 
 /* MAIN || Content */
 .content{
-    display: flex;
-    justify-content: flex-end;
+    display: grid;
+    grid:
+    "header" auto
+    "section" 1fr
+    "." auto
+    / 1fr;
+    gap: 8px;
+
     width: 100%;
 }
 .header{
@@ -259,4 +266,10 @@ body{
 .admin-name h1:nth-child(3){
     user-select: none;
     cursor: pointer;
+}
+
+/* //Sections */
+.content section{
+    display: flex;
+    flex-direction: column;
 }

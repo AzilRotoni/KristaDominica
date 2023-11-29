@@ -21,26 +21,21 @@ const firestore = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', function (e) {
     e.preventDefault
-    
+
     //Prevent unwanted users
     if (sessionStorage.getItem('reloaded') === null || sessionStorage.getItem('reloaded') === 'yes') {
-        console.log('page is refreshed 1')
         async function checkUserCredentials() {
         const usersCollection = collection(firestore, 'Admin');
         const username = sessionStorage.getItem('username');
-        console.log('Test 1: ' + username)
 
         const q = query(usersCollection, where('username', '==', username));
-        console.log('Test 2: ' + q)
         getDocs(q)
             .then((querySnapshot) => {
                 if (querySnapshot.empty) {
-                    console.log("User is not signed in");
                     window.location.href = 'index.html';
                 }
             })
             .catch((error) => {
-                console.error('Error checking user credentials:', error);
             });
         }
         checkUserCredentials();
@@ -118,6 +113,18 @@ document.addEventListener('DOMContentLoaded', function (e) {
         tooltip.textContent = text;
         return tooltip;
     }
+    //Navinks Selector
+    showSection('dashboard');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const sectionClass = this.getAttribute('data-section');
+            showSection(sectionClass);
+        });
+    });
+
+    // Title
+    document.getElementById('title').textContent = `DASHBOARD - ${role} ${fname}`;
 });
 
 // Check screen width and redirect if below 768
@@ -162,3 +169,17 @@ closeButton.addEventListener('click', function() {
     }
     document.getElementById('sidebar-container').style.width = '100px';
 });
+
+//SIDE NAVLINKS
+function showSection(sectionClass) {
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    const selectedSection = document.querySelector(`.${sectionClass}`);
+    if (selectedSection) {
+        selectedSection.style.display = 'flex';
+    }else{
+        selectedSection.style.display = 'none';
+    }
+}

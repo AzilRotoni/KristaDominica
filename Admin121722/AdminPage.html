@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD - ADMIN</title>
+    <title id="title"></title>
     <!-- CSS -->
     <link rel="stylesheet" href="AdminPage.css">
 </head>
@@ -21,24 +21,24 @@
             <div class="side-navbar">
                 <div class="side-navlink-container">
                     <hr>
-                    <div class="side-navlink" data-tooltip="Dashboard">
+                    <div class="side-navlink" data-tooltip="Dashboard" data-section="dashboard">
                         <img src="Images/dashboard.svg" alt="Logo" draggable="false"/>
                         <h3 class="sidebar-label">Dashboard</h3>
                     </div>
                     <hr>
-                    <div class="side-navlink" data-tooltip="Home">
+                    <div class="side-navlink" data-tooltip="Home" data-section="home">
                         <img src="Images/home.svg" alt="home" draggable="false"/>
                         <h3 class="sidebar-label" >Home</h3>
                     </div>
-                    <div class="side-navlink" data-tooltip="Advisory class">
+                    <div class="side-navlink" data-tooltip="Advisory class" data-section="advisoryClass">
                         <img src="Images/sharp-class.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Advisory Class</h3>
                     </div>
-                    <div class="side-navlink" data-tooltip="studentx">
+                    <div class="side-navlink" data-tooltip="students" data-section="Students">
                         <img src="Images/student.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Students</h3>
                     </div>
-                    <div class="side-navlink" data-tooltip="storage">
+                    <div class="side-navlink" data-tooltip="storage" data-section="storage">
                         <img src="Images/database.svg" alt="" draggable="false"/>
                         <h3 class="sidebar-label">Storage</h3>
                     </div>
@@ -68,19 +68,19 @@
                     <h1 id="role-fName"></h1>
                 </div>
             </header>
-            <section class="dashboard" display="flex">
-                <div></div>
+            <section class="dashboard">
+                <a href="">das</a>
             </section>
-            <section class="home" display="flex">
+            <section class="home" display="none">
 
             </section>
-            <section class="advisoryClass" display="flex">
+            <section class="advisoryClass" display="none">
 
             </section>
-            <section class="Students" display="flex">
+            <section class="Students" display="none">
 
             </section>
-            <section class="storage" display="flex">
+            <section class="storage" display="none">
 
             </section>
         </main>

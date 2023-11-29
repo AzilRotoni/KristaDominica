@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ADMIN Log in Page0</title>
+    <title>ADMIN Log in</title>
     <!-- CSS -->
     <link rel="stylesheet" href="AdminLogInPage.css">
 </head>
@@ -49,14 +49,17 @@
                 </div>
             </div>
         </div>
+        <div class="alert hidden" id="alertContainer">
+            <button id="closeAlert">
+                <div id="spinner"></div>
+                <span id="closeIcon">X</span>
+            </button>
+            <div id="alertContent"></div>
+        </div>
     </main>
-    <div class="alert hidden" id="alertContainer">
-        <button id="closeAlert">
-            <div id="spinner"></div>
-            <span id="closeIcon">X</span>
-        </button>
-        <div id="alertContent"></div>
-    </div>
-    <script src="AdminLogInpage.js" type="module"></script>
+    <div id="particles-js"></div>
 </body>
+<script src="particles.js-master/particles.js"></script>
+<script src="particles.js-master/demo/js/app.js"></script>
+<script src="AdminLogInpage.js" type="module"></script>
 </html>
