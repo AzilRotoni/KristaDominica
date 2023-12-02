@@ -8,7 +8,7 @@ const firebaseConfig = {
     storageBucket: "teacher-kd-amad.appspot.com",
     messagingSenderId: "623162023007",
     appId: "1:623162023007:web:dd7f6118a43c1b0a038fea",
-    measurementId: "G-8VW1ZR77HP"
+    measurementId: "G-8VW1ZR77HP",
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -22,9 +22,10 @@ const firestore = getFirestore(app);
 document.addEventListener('DOMContentLoaded', function (e) {
     e.preventDefault
 
-    //Page 404
-    document.getElementById('page-404').style.display = 'none'
-
+    // document.getElementById('Main').style.maxWidth = document.getElementById('Main').innerWidth + 'px';
+    document.body.style.maxWidth = window.screen.width + 'px'
+    closeSidebar();
+    
     // Load the Animated SVG
     let fname = sessionStorage.getItem('FirstName')
     let lname = sessionStorage.getItem('LastName')
@@ -40,61 +41,78 @@ document.addEventListener('DOMContentLoaded', function (e) {
     } else {
         simulateAdminLogin();
     }
-    let AdminPage = document.getElementById('admin-page');
+
     function simulateAdminLogin() {
-        let svgContainer = document.getElementById('svg-container');
-        svgContainer.id = 'svg-container-hidden';
-        let AdminPage = document.getElementById('admin-page');
-        AdminPage.classList = 'show-admin-page';
+        const svgContainer = document.getElementById('svg-container');
+        const main = document.getElementById('Main');
+        const sideNav = document.getElementById('side-navbar-container');
+
+        svgContainer.classList = 'hidden-svg-container';
+        main.classList = 'Main';
+        sideNav.classList = 'side-navbar-container';
+        sessionStorage.setItem('animationShown', 'true');
+        document.getElementById('Main').style.display = 'block';
+        document.getElementById('side-navbar-container').style.display = 'flex';
     }
     function showAdminPage(fname, lname) {
-        let svgContainer = document.getElementById('svg-container');
         sessionStorage.setItem('animationShown', 'true');
-        
+        const svgContainer = document.getElementById('svg-container');
+        const main = document.getElementById('Main');
+        const sideNav = document.getElementById('side-navbar-container');
+
         if(svgContainer){
-            svgContainer.id = 'svg-container';
+            svgContainer.classList = 'svg-container';
             document.getElementById('open').style.display = 'none';
             document.getElementById('close').style.display = 'block';
             if(fname !== null){
                 document.getElementById('greet').textContent = `Hello ${fname} ${lname} !!`;
             }
-
         setTimeout(function () {
-            svgContainer.id = 'svg-container-hidden';
-            AdminPage.classList = 'show-admin-page';
-        }, 2500);
+            svgContainer.classList = 'hidden-svg-container';
+            main.classList = 'Main';
+            sideNav.classList = 'side-navbar-container';
+            document.getElementById('Main').style.display = 'block';
+            document.getElementById('side-navbar-container').style.display = 'flex';
+
+        }, 3000); //3000
         }
     }
 
     //Prevent unwanted users
-    if (sessionStorage.getItem('reloaded') === null || sessionStorage.getItem('reloaded') === 'yes') {
+    let isAdmin = sessionStorage.getItem('isAdmin');
+    if (!sessionStorage.getItem('reloaded')) {
         async function checkUserCredentials() {
-        const usersCollection = collection(firestore, 'Admin');
-        const username = sessionStorage.getItem('username');
-
-        const q = query(usersCollection, where('username', '==', username));
-        getDocs(q)
-            .then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    sessionStorage.clear()
+            const username = sessionStorage.getItem('username');
+            if (isAdmin === null) {
+                const usersCollection = collection(firestore, 'Admin');
+                const q = query(usersCollection, where('username', '==', username));
+                const querySnapshot = await getDocs(q);
+                console.log(querySnapshot);
+                if (!querySnapshot.empty) {
+                    isAdmin = true;
+                    console.log(isAdmin);
+                } else {
+                    isAdmin = false;
+                    console.log(isAdmin);
+                    sessionStorage.clear();
                     window.location.href = 'index.html';
                 }
-            })
-            .catch((error) => {
-            });
+                // Cache the isAdmin status
+                sessionStorage.setItem('isAdmin', isAdmin);
+            }
         }
         checkUserCredentials();
     }else{
         if (typeof(Storage) !== "undefined") {
             window.addEventListener('beforeunload', function() {
-                sessionStorage.clear();
+                // sessionStorage.clear();
             });
         }   
     }
     sessionStorage.setItem('reloaded', 'yes');
 
     //Tool Tip
-    const navLinks = document.querySelectorAll(".side-navlink");
+    const navLinks = document.querySelectorAll(".side-navlink1, .side-navlink2[data-tooltip]:not(:empty)");
     navLinks.forEach((link) => {
         link.addEventListener("mouseover", showTooltip);
         link.addEventListener("mouseout", hideTooltip);
@@ -134,80 +152,203 @@ document.addEventListener('DOMContentLoaded', function (e) {
     document.getElementById('title').textContent = `DASHBOARD - ${role} ${fname}`;
 
     //===============================================================================================
-    //STUDENTS ======================================================================================
+    //STUDENTS 
+    //======================================================================================
 
     //List of Students
+if (sessionStorage.getItem('reloaded') === 'yes') {
+    const ul_menu = document.getElementById('menu');
+    let dropdowns;
+    let uniqueSections;
+    const studentsCollectionRef = collection(firestore, 'Sections');
+    
+    getDocs(studentsCollectionRef)
+        .then((querySnapshot) => {
+            uniqueSections = [];
+            querySnapshot.forEach((doc) => {
+                
+                const sectionData = doc.data();
+                const fieldNames = Object.keys(sectionData);
 
-    const parentDiv = document.getElementById('listOfSection');
-    if (sessionStorage.getItem('reloaded') === 'yes') {
-        let uniqueSections
-            const studentsCollectionRef = collection(firestore, 'MyStudents');
-            getDocs(studentsCollectionRef)
-            .then((querySnapshot) => {
-                uniqueSections = [];
-                querySnapshot.forEach((doc) => {
-                const section = doc.data().Section;
-                if (!uniqueSections.includes(section)) {
-                    uniqueSections.push(section);
-                }
-                });
-                console.log(uniqueSections);
-                uniqueSections.forEach((section) => {
-                    const sectionContainer = document.createElement('div');
-                    sectionContainer.className = 'section-container';
+                if (!uniqueSections.includes(sectionData.Section)) {
+                    uniqueSections.push(sectionData.Section);
 
-                    const sectionContainerID = section.toLowerCase().replace(/\s+/g, '_');
-                    sectionContainer.id = sectionContainerID;
+                    const li = document.createElement('li');
 
-                    const h2 = document.createElement('h2');
-                    querySnapshot.forEach((doc) => {
-                        if (doc.data().Section === section) {
-                            const grade = doc.data().Grade;
-                            h2.textContent = `G${grade} - ${section}`;
-                        }
+                    // Iterate over all fields and add them to the li element
+                    fieldNames.forEach((fieldName) => {
+                        const li = document.createElement('li');
+                        li.textContent = `${sectionData[fieldName]}`;
+                        li.className = 'section';
+                        ul_menu.appendChild(li);
+                        sessionStorage.setItem(fieldName, sectionData[fieldName]);
                     });
-                    sectionContainer.appendChild(h2);
-                    parentDiv.appendChild(sectionContainer);
-                });
-            })
-            .catch((error) => {
-                console.error('Error getting documents: ', error);
+                }
             });
-    }
+            uniqueSections.sort((a, b) => a.localeCompare(b));
+            sessionStorage.setItem('uniqueSections', JSON.stringify(uniqueSections));
+
+            dropdowns = document.querySelectorAll('.dropdown');
+        })
+        .catch((error) => {
+            console.error('Error getting documents: ', error);
+        })
+        .finally(() => {
+            if (dropdowns) {
+                dropdowns.forEach((dropdown) => {
+                    const select = dropdown.querySelector('.select');
+                    const caret = dropdown.querySelector('.caret');
+                    const menu = dropdown.querySelector('.menu');
+                    const options = dropdown.querySelectorAll('.menu li');
+                    const selected = dropdown.querySelector('.selected');
+
+                    select.addEventListener('click', () => {
+                        select.classList.toggle('select-clicked');
+                        caret.classList.toggle('caret-rotate');
+                        menu.classList.toggle('menu-open');
+                    });
+
+                    options.forEach(option => {
+                        option.addEventListener('click', () =>{
+                            selected.innerText = option.innerText;
+                            select.classList.remove('select-clicked')
+                            caret.classList.remove('caret-rotate')
+                            menu.classList.remove('menu-open')
+
+                            options.forEach(option =>{
+                                option.classList.remove('active')
+                            })
+                            option.classList.add('active')
+                        })
+                    });
+                });
+            }
+        });
+}
+
 });
+            
 
 // Check screen width and redirect if below 768
 function checkScreenWidth() {
-    var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (screenWidth <= 770) {
         document.getElementById('Main').style.display = 'none';
+        document.getElementById('side-navbar-container').style.display = 'none';
         document.getElementById('page-404').style.display = 'block'
-    }else if(screenWidth <= 770 || !sessionStorage.getItem('animationShown')){
-        document.getElementById('page-404').style.display = 'none'
-    }else{
-        document.getElementById('Main').style.display = 'block';
-        document.getElementById('page-404').style.display = 'none'
+    }else if(screenWidth >= 770 && sessionStorage.getItem('animationShow')){
+
+    }else if(!sessionStorage.getItem('animationShow') && screenWidth >= 770){
+        if(document.querySelector('.Main')){
+            document.querySelector('.Main').style.display = 'block';        
+            document.querySelector('.side-navbar-container').style.display = 'flex';
+            document.getElementById('page-404').style.display = 'none'
+        }else{
+            document.querySelector('.hidden-Main').style.display = 'none';
+            document.querySelector('.hidden-side-navbar-container').style.display = 'none';
+            document.getElementById('page-404').style.display = 'none'
+        }
+    }
+    // document.body.style.maxWidth = window.innerWidth + "px";
+    document.getElementById('Main').style.Width = (window.innerWidth) + "px";
+}
+window.onload = checkScreenWidth;
+window.addEventListener("resize", checkScreenWidth);
+window.addEventListener("resize", closeSidebar);
+
+//Close Sidebar at 1000px
+function closeSidebar() {
+    if(sessionStorage.getItem('reloaded')){
+        const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const openButton = document.getElementById('open');
+        const closeButton = document.getElementById('close');
+        if(screenWidth >= 999 && openButton.classList.contains('active')){
+            openButton.classList.add('active');
+            closeButton.classList.remove('active');
+
+            openButton.style.display = 'block';
+            closeButton.style.display = 'none';
+
+            var sidebarLabels = document.getElementsByClassName('sidebar-label');
+            for (var i = 0; i < sidebarLabels.length; i++) {
+                sidebarLabels[i].style.display = 'none';
+                sidebarLabels[i].classList.add('hide');
+            }
+            document.getElementById('side-navbar-container').style.width = '100px';
+        }else if (screenWidth <= 999 && !openButton.classList.contains('active')){
+            openButton.classList.add('active');
+            closeButton.classList.remove('active');
+
+            openButton.style.display = 'none';
+            closeButton.style.display = 'none';
+
+            var sidebarLabels = document.getElementsByClassName('sidebar-label');
+            for (var i = 0; i < sidebarLabels.length; i++) {
+                sidebarLabels[i].style.display = 'none';
+                sidebarLabels[i].classList.add('hide');
+            }
+            document.getElementById('side-navbar-container').style.width = '100px';
+        } else if (screenWidth <= 999  && openButton.classList.contains('active')) {
+            openButton.classList.add('active');
+            closeButton.classList.remove('active');
+
+            openButton.style.display = 'none';
+            closeButton.style.display = 'none';
+
+            var sidebarLabels = document.getElementsByClassName('sidebar-label');
+            for (var i = 0; i < sidebarLabels.length; i++) {
+                sidebarLabels[i].style.display = 'none';
+                sidebarLabels[i].classList.add('hide');
+            }
+            document.getElementById('side-navbar-container').style.width = '100px';
+        }else if (screenWidth >= 999 && openButton.classList.contains('active')){
+            openButton.classList.add('active');
+            closeButton.classList.remove('active');
+
+            openButton.style.display = 'none';
+            closeButton.style.display = 'block';
+
+            var sidebarLabels = document.getElementsByClassName('sidebar-label');
+            for (var i = 0; i < sidebarLabels.length; i++) {
+                sidebarLabels[i].style.display = 'none';
+                sidebarLabels[i].classList.add('hide');
+            }
+            document.getElementById('side-navbar-container').style.width = '100px';
+        }else{
+            openButton.classList.remove('active');
+            closeButton.classList.add('active');
+
+            openButton.style.display = 'none';
+            closeButton.style.display = 'block';
+
+            var sidebarLabels = document.getElementsByClassName('sidebar-label');
+            for (var i = 0; i < sidebarLabels.length; i++) {
+                sidebarLabels[i].style.display = 'block';
+                sidebarLabels[i].classList.remove('hide');
+            }
+            document.getElementById('side-navbar-container').style.width = '250px'
+        }
     }
 }
-// window.onload = checkScreenWidth;
-// window.addEventListener("resize", checkScreenWidth);
 
 //Toggle Close and Open
 var openButton = document.getElementById('open');
 var closeButton = document.getElementById('close');
 openButton.addEventListener('click', function() {
-    openButton.classList.remove('active');
-    closeButton.classList.add('active');
+    if((window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) >= 999){
+        openButton.classList.remove('active');
+        closeButton.classList.add('active');
 
-    openButton.style.display = 'none';
-    closeButton.style.display = 'block';
+        openButton.style.display = 'none';
+        closeButton.style.display = 'block';
 
-    var sidebarLabels = document.getElementsByClassName('sidebar-label');
-    for (var i = 0; i < sidebarLabels.length; i++) {
-        sidebarLabels[i].style.display = 'block';
-        sidebarLabels[i].classList.remove('hide');
+        var sidebarLabels = document.getElementsByClassName('sidebar-label');
+        for (var i = 0; i < sidebarLabels.length; i++) {
+            sidebarLabels[i].style.display = 'block';
+            sidebarLabels[i].classList.remove('hide');
+        }
+        document.getElementById('side-navbar-container').style.width = '250px'
     }
-    document.getElementById('sidebar-container').style.width = '300px'
 });
 closeButton.addEventListener('click', function() {
     openButton.classList.add('active');
@@ -221,7 +362,7 @@ closeButton.addEventListener('click', function() {
         sidebarLabels[i].style.display = 'none';
         sidebarLabels[i].classList.add('hide');
     }
-    document.getElementById('sidebar-container').style.width = '100px';
+    document.getElementById('side-navbar-container').style.width = '100px';
 });
 
 //SIDE NAVLINKS

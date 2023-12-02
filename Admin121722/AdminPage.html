@@ -8,93 +8,127 @@
     <link rel="stylesheet" href="AdminPage.css">
 </head>
 <body>
-    <main id="Main">
-        <div id="svg-container">
-            <img src="Images/start-logo.svg" alt="Logo" draggable="false"/>
-            <h1 id="greet"></h1>
+    <!-- INTRO ANIMATION -->
+    <div class="svg-container" id="svg-container">
+        <img src="Images/start-logo.svg" alt="Logo" draggable="false"/>
+        <h1 class="greet" id="greet"></h1>
+    </div>
+    <!-- SIDE HEADER || NAVBAR -->
+    <header class="hidden-side-navbar-container" id="side-navbar-container">
+        <div class="KDlogo-container">
+            <img src="Images/logo.svg" alt="Logo" draggable="false"/>
+            <h1 class="sidebar-label">KD AMAD</h1>
         </div>
-        <div class="admin-page" id="admin-page" display='none'>
-            <header class="sidebar-container" id="sidebar-container">
-                <div class="weblogo-container">
-                    <img src="Images/logo.svg" alt="Logo" draggable="false"/>
-                    <h1 class="sidebar-label">KD AMAD</h1>
+        <div class="side-navbar" id="side-navbar">
+            <div class="side-navlink-container1">
+                <hr>
+                <nav class="side-navlink1" id="dashboard" data-tooltip="Dashboard" data-section="dashboard">
+                    <img src="Images/dashboard.svg" alt="Logo" draggable="false"/>
+                    <h3 class="sidebar-label">Dashboard</h3>
+                </nav>
+                <hr>
+                <nav class="side-navlink1" id="Advisory Class" data-tooltip="Advisory class" data-section="advisoryClass">
+                    <img src="Images/sharp-class.svg" alt="" draggable="false"/>
+                    <h3 class="sidebar-label">Advisory Class</h3>
+                </nav>
+                <nav class="side-navlink1" id="myStudents" data-tooltip="My students" data-section="MyStudents">
+                    <img src="Images/student.svg" alt="" draggable="false"/>
+                    <h3 class="sidebar-label"> My Students</h3>
+                </nav>
+                <nav class="side-navlink1" id="storage" data-tooltip="storage" data-section="storage">
+                    <img src="Images/database.svg" alt="" draggable="false"/>
+                    <h3 class="sidebar-label">Storage</h3>
+                </nav>
+            </div>
+            <div class="side-navlink-container2">
+                <nav class="side-navlink2" id="log-out" data-tooltip="log out">
+                    <img src="Images/log-out.svg" alt="" draggable="false"/>
+                    <h3 class="sidebar-label">Log Out</h3>
+                </nav>
+                <div class="toggleSideBar" id="toggleSideBar">
+                    <nav class="side-navlink2" id="open">
+                        <img src="Images/right.svg" alt="" draggable="false"/>
+                    </nav>
+                    <nav class="side-navlink2" id="close">
+                        <img src="Images/left.svg" alt="" draggable="false"/>
+                    </nav>
                 </div>
-                <div class="side-navbar">
-                    <div class="side-navlink-container">
-                        <hr>
-                        <div class="side-navlink" if="dashboard" data-tooltip="Dashboard" data-section="dashboard">
-                            <img src="Images/dashboard.svg" alt="Logo" draggable="false"/>
-                            <h3 class="sidebar-label">Dashboard</h3>
-                        </div>
-                        <hr>
-                        <div class="side-navlink" id="Advisory Class" data-tooltip="Advisory class" data-section="advisoryClass">
-                            <img src="Images/sharp-class.svg" alt="" draggable="false"/>
-                            <h3 class="sidebar-label">Advisory Class</h3>
-                        </div>
-                        <div class="side-navlink" id="myStudents" data-tooltip="My students" data-section="MyStudents">
-                            <img src="Images/student.svg" alt="" draggable="false"/>
-                            <h3 class="sidebar-label"> My Students</h3>
-                        </div>
-                        <div class="side-navlink" id="storage" data-tooltip="storage" data-section="storage">
-                            <img src="Images/database.svg" alt="" draggable="false"/>
-                            <h3 class="sidebar-label">Storage</h3>
-                        </div>
-                    </div>
-                    <div class="sidebar-navlink-container">
-                        <hr>
-                        <div class="side-navlink" id="log-out" data-tooltip="log out">
-                            <img src="Images/log-out.svg" alt="" draggable="false"/>
-                            <h3 class="sidebar-label">Log Out</h3>
-                        </div>
-                        <div class="toggleSideBar" id="toggleSideBar">
-                            <div class="side-navlinks" id="open">
-                                <img src="Images/right.svg" alt="" draggable="false"/>
-                            </div>
-                            <div class="side-navlinks" id="close">
-                                <img src="Images/left.svg" alt="" draggable="false"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <main class="content">
-                <header class="header">
-                    <div class="admin-name">
-                        <img src="Images/admin-outlined.svg" draggable="false">
-                        <h1 id="role"></h1>
-                        <h1 id="role-fName"></h1>
-                    </div>
-                </header>
-                <section class="dashboard">
-                    <a href=""></a>
-                </section>
-                <section class="advisoryClass" display="none">
-    
-                </section>
-                <section class="MyStudents" display="none">
-                    <div class="manageStudents">
-    
-                    </div>
-                    <div class="listOfSection-container">
-                        <h1>Sections</h1>
-                        <div class="listOfSection" id="listOfSection">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="storage" display="none">
-    
-                </section>
-            </main>
+            </div>
         </div>
+    </header>
+    <main class="hidden-Main "id="Main">
+        <header class="header">
+            <div class="admin-name">
+                <img src="Images/admin-outlined.svg" draggable="false">
+                <h1 id="role"></h1>
+                <h1 id="role-fName"></h1>
+            </div>
+        </header>
+        <section class="dashboard">
+            <a href=""></a>
+        </section>
+        <section class="advisoryClass" display="none">
+            
+        </section>
+        <section class="MyStudents" display="none">
+            <div class="listOfSections-container">
+                <div class="dropdown-listOfSections" id="listOfSections">
+                    <div class="dropdown" id="dropdown">
+                        <div class="select">
+                            <span class="selected">Section</span>
+                            <div class="caret"></div>
+                        </div>
+                        <ul class="menu" id="menu">
+                            <!-- JS Handle li -->
+                        </ul>
+                    </div>
+                </div>  
+                <div class="textInputWrapper">
+                    <input spellcheck="false" placeholder="Student's name" type="text" class="textInput">
+                </div>
+                <div class="Btn-container">
+                    <button class="Btn">
+                        <img src="Images/add.svg" alt="">
+                      </button>
+                    <button class="Btn">
+                        <img src="Images/edit.svg" alt="">
+                      </button>
+                </div>
+            </div>
+            <div class="manageStudents">
+                <div class="tableOfStudents">
+                    <table class="table">
+                        <thead class="THead">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>LRN</th>
+                                <th>Contacts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Azil B. Rotoni</td>
+                                <td>2000287064</td>
+                                <td>09184880003</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section class="storage" display="none">
+            
+        </section>
     </main>
     <div class="Page404-container" id="page-404">
-        <div class="Page-404" id="page-404">
+        <div class="Page-404" >
             <h1>404</h1>
             <h4>Page Not Found</h4>
         </div>
     </div>
-</body>
-<!-- <script src="Admin-ScriptFirebase.js" type="module"></script> -->
+</body> 
+<!-- <script src="Admin-ScriptFirebase.js" type="module"></script> -->  
 <script src="AdminPage.js" type="module"></script>
 </html>
