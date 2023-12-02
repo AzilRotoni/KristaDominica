@@ -81,10 +81,7 @@ login.addEventListener("click", async function(){
         if (adminDocSnapshot.exists()) {
             const adminData = adminDocSnapshot.data();
             
-            console.log("First Name:", adminData["First Name"]);
-            console.log("Last Name:", adminData["Last Name"]);
-            console.log("Role:", adminData["Role"]);
-            console.log("username:", adminData["username"]);
+            sessionStorage.clear();
             sessionStorage.setItem('username', adminData["username"])
             sessionStorage.setItem('FirstName', adminData["First Name"])
             sessionStorage.setItem('LastName', adminData["Last Name"])
