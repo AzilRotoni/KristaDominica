@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             querySnapshot.forEach((doc) => {
                 const sectionData = doc.data();
                 const fieldNames = Object.keys(sectionData);
-                fieldNames.sort();
+                fieldNames.sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
                 fieldNames.forEach((fieldName) => {
                     const li = document.createElement('li');
                     li.textContent = `${sectionData[fieldName]}`;
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 async function fillTable(selectedSection){
     console.log(selectedSection);
     let matchingDocumentData = [];
-    if(sessionStorage.getItem(selectedSection)){
+    if(!sessionStorage.getItem(selectedSection)){
         const studentsCollectionRef = collection(firestore, 'MyStudents');
         getDocs(studentsCollectionRef)
         .then((querySnapshot) => {
@@ -310,7 +310,7 @@ async function fillTable(selectedSection){
 
         })
 
-        sessionStorage.setItem(selectedSection, 'yes')
+        // sessionStorage.setItem(selectedSection, 'yes')
     }else{
         console.log('luh');
         
