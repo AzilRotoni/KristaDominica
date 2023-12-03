@@ -339,8 +339,8 @@ function checkScreenWidth() {
     // document.body.style.maxWidth = window.innerWidth + "px";
     document.getElementById('Main').style.Width = (window.innerWidth) + "px";
 }
-window.onload = checkScreenWidth;
-window.addEventListener("resize", checkScreenWidth);
+//window.onload = checkScreenWidth;
+//window.addEventListener("resize", checkScreenWidth);
 window.addEventListener("resize", closeSidebar);
 
 //Close Sidebar at 1000px
