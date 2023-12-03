@@ -87,13 +87,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 const usersCollection = collection(firestore, 'Admin');
                 const q = query(usersCollection, where('username', '==', username));
                 const querySnapshot = await getDocs(q);
-                console.log(querySnapshot);
                 if (!querySnapshot.empty) {
                     isAdmin = true;
-                    console.log(isAdmin);
                 } else {
                     isAdmin = false;
-                    console.log(isAdmin);
                     sessionStorage.clear();
                     window.location.href = 'index.html';
                 }
@@ -156,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     //======================================================================================
 
     //List of Students
-if (sessionStorage.getItem('reloaded') === 'yes') {
+    if (!sessionStorage.getItem('isSectionCollected')) {
     const ul_menu = document.getElementById('menu');
     let dropdowns;
     let uniqueSections;
@@ -166,28 +163,18 @@ if (sessionStorage.getItem('reloaded') === 'yes') {
         .then((querySnapshot) => {
             uniqueSections = [];
             querySnapshot.forEach((doc) => {
-                
                 const sectionData = doc.data();
                 const fieldNames = Object.keys(sectionData);
-
-                if (!uniqueSections.includes(sectionData.Section)) {
-                    uniqueSections.push(sectionData.Section);
-
+                fieldNames.sort();
+                fieldNames.forEach((fieldName) => {
                     const li = document.createElement('li');
-
-                    // Iterate over all fields and add them to the li element
-                    fieldNames.forEach((fieldName) => {
-                        const li = document.createElement('li');
-                        li.textContent = `${sectionData[fieldName]}`;
-                        li.className = 'section';
-                        ul_menu.appendChild(li);
-                        sessionStorage.setItem(fieldName, sectionData[fieldName]);
-                    });
-                }
+                    li.textContent = `${sectionData[fieldName]}`;
+                    li.className = 'section';
+                    ul_menu.appendChild(li);
+                    sessionStorage.setItem(fieldName, sectionData[fieldName]);
+                });
+                sessionStorage.setItem('sections',JSON.stringify(Object.values(sectionData)))
             });
-            uniqueSections.sort((a, b) => a.localeCompare(b));
-            sessionStorage.setItem('uniqueSections', JSON.stringify(uniqueSections));
-
             dropdowns = document.querySelectorAll('.dropdown');
         })
         .catch((error) => {
@@ -195,6 +182,7 @@ if (sessionStorage.getItem('reloaded') === 'yes') {
         })
         .finally(() => {
             if (dropdowns) {
+                sessionStorage.setItem('isSectionCollected', 'yes')
                 dropdowns.forEach((dropdown) => {
                     const select = dropdown.querySelector('.select');
                     const caret = dropdown.querySelector('.caret');
@@ -219,16 +207,115 @@ if (sessionStorage.getItem('reloaded') === 'yes') {
                                 option.classList.remove('active')
                             })
                             option.classList.add('active')
+                            fillTable(option.innerText);
                         })
                     });
                 });
             }
         });
-}
+    }else{
+        const ul_menu = document.getElementById('menu');
+        let dropdowns;
+        const fieldNames = JSON.parse(sessionStorage.getItem('sections'))
+        fieldNames.sort();
+        fieldNames.forEach((fieldName) => {
+            const li = document.createElement('li');
+            li.textContent = `${fieldName}`;
+            li.className = 'section';
+            ul_menu.appendChild(li);
+        });
+        dropdowns = document.querySelectorAll('.dropdown');
+        if (dropdowns) {
+            sessionStorage.setItem('isSectionCollected', 'yes')
+            dropdowns.forEach((dropdown) => {
+                const select = dropdown.querySelector('.select');
+                const caret = dropdown.querySelector('.caret');
+                const menu = dropdown.querySelector('.menu');
+                const options = dropdown.querySelectorAll('.menu li');
+                const selected = dropdown.querySelector('.selected');
 
+                select.addEventListener('click', () => {
+                    select.classList.toggle('select-clicked');
+                    caret.classList.toggle('caret-rotate');
+                    menu.classList.toggle('menu-open');
+                });
+
+                options.forEach(option => {
+                    option.addEventListener('click', () =>{
+                        selected.innerText = option.innerText;
+                        select.classList.remove('select-clicked')
+                        caret.classList.remove('caret-rotate')
+                        menu.classList.remove('menu-open')
+
+                        options.forEach(option =>{
+                            option.classList.remove('active')
+                        })
+                        option.classList.add('active')
+                        fillTable(option.innerText);
+                    })
+                });
+            });
+        }
+    }
 });
             
+async function fillTable(selectedSection){
+    console.log(selectedSection);
+    let matchingDocumentData = [];
+    if(sessionStorage.getItem(selectedSection)){
+        const studentsCollectionRef = collection(firestore, 'MyStudents');
+        getDocs(studentsCollectionRef)
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                if (data.Section === selectedSection) {
+                    const fullName = `${data["Last Name"]}, ${data["First Name"]} ${data["Middle Name"]+'.' || ''}`;
+                    const documentData = {
+                        id: doc.id,
+                        FName: data["First Name"],
+                        LName: data["Last Name"],
+                        MName: data["Middle Name"],
+                        gender: data["Gender"],
+                        section: data["Section"],
+                        fullName: fullName.trim()
+                    };
+                    matchingDocumentData.push(documentData);
+                    sessionStorage.setItem(`${data["Section"]} - ${ data["Last Name"]}, ${ data["First Name"]}`, JSON.stringify(matchingDocumentData));
+                }
+            });
+        })
+        .catch((error) =>{
 
+        })
+        .finally(() =>{
+            const tbody = document.getElementById('TBody');
+            tbody.innerHTML = '';
+            let counter = 1;
+            matchingDocumentData.forEach((data) => {
+            const newRow = document.createElement('tr');
+            const numberCell = document.createElement('td');
+            numberCell.textContent = counter++;
+            newRow.appendChild(numberCell);
+
+            const columns = ['fullName', 'gender', 'section'];
+            
+            columns.forEach((column) => {
+                const cell = document.createElement('td');
+                cell.textContent = data[column];
+                newRow.appendChild(cell);
+            });
+
+            tbody.appendChild(newRow);
+            });
+
+        })
+
+        sessionStorage.setItem(selectedSection, 'yes')
+    }else{
+        console.log('luh');
+        
+    }
+}
 // Check screen width and redirect if below 768
 function checkScreenWidth() {
     const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -378,3 +465,4 @@ function showSection(sectionClass) {
         selectedSection.style.display = 'none';
     }
 }
+

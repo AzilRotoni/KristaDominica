@@ -29,7 +29,7 @@ body {
     display: flex;
     gap: 8px;
     background-color: #0C1B33;
-    border: 2px solid var(--blue4);
+    /* border: 2px solid var(--blue4); */
     box-shadow: 0px 0px 50px 5px #0A1019;
 }
 /* 404 Page */
@@ -223,17 +223,17 @@ START
     border-radius: 5px;
     font-size: 12px;
     left: 110px;
-    z-index: 100;
+    z-index: 1000;
     white-space: nowrap;
 }
 
 /* ========================= MAIN || Content ==========================*/
 .Main{
-    position: relative;
     width: 100%;
     min-width: 0;
     position: relative;
     overflow: auto;
+    height: 100vh;
 }
 /* Header */
 .Main .header{
@@ -244,10 +244,10 @@ START
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 50px;
+    padding: 10px 30px;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 .admin-name{
     display: flex;
@@ -278,23 +278,26 @@ START
     justify-content: flex-start;
     flex-direction: column; 
     z-index: 1;
-    padding: 20px 50px;
+    padding: 20px 30px;
 }
 .listOfSections-container{
-    width: 100%;
     padding: 5px 15px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     flex-grow: 1;
     background-color: var(--blue4);
 }
+.dropdown{
+    width: 100%;
+}
 .dropdown-listOfSections{
-    min-width: 15em;
+    min-width: 12em;
     position: relative;
     margin: 5px 15px;
-    z-index: 100;
+    display: flex;
+    gap: 10px;
 }
 .dropdown-listOfSections .select{
     background-color: var(--blue2);
@@ -306,6 +309,7 @@ START
     padding: 10px;
     cursor: pointer;
     transition: background 0.5s;
+    white-space: nowrap;
 }
 .select-clicked{
     border: 1px solid var(--blue1);
@@ -329,7 +333,7 @@ START
     list-style: none;
     padding: 5px 8px;
     background-color: var(--blue2);
-    border: 1px solid #0A1019;
+    border: 2px solid #ADBBC5;
     border-radius: 15px;
     position: absolute;
     top: 40px;
@@ -346,9 +350,6 @@ START
     border-radius: 10px;
     cursor: pointer;
     user-select: none;
-}
-.menu:hover{
-    background: #0F1B2E;
 }
 .menu li:hover{
     background-color: #214175;
@@ -481,36 +482,158 @@ START
     transform: scale(0.8);
 }
 
+.studentInfo-container{
+    margin-top: 5px;
+    width: 100%;
+    border-radius: 15px;
+    border: 5px solid var(--blue4);
+    background-color: var(--blue4);
+    display: flex;
+    flex-direction: column;
+}
+.studentInfo-header{
+    background-color: var(--blue3);
+    height: 65px;
+    border-radius: 15px 15px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+.circles{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+}
+.circles div{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+.circles .circle1{
+    background-color: crimson;
+}
+.circles .circle2{
+    background-color: gold;
+}
+.circles .circle3{
+    background-color: blue;
+}
+.studentInfo-header h1{
+    font-size: 1.2rem;
+    text-align: end;
+    padding-inline: 20px;
+    letter-spacing: 2px;
+}
+.studentInfo-content{
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 15px;
+    font-size: 1.1rem;
+    gap: 10px;
+
+    display: none; 
+}
+.information-container{
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(auto-fill);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    grid-auto-flow: row dense;
+    justify-content: start;
+    align-content: center;
+    justify-items: start;
+    align-items: center;
+    letter-spacing: 0.5px;
+}
+.information-container a:nth-of-type(odd){
+    margin-right: 15px;
+    color: var(--font-color3);
+    white-space: nowrap;
+}
+.information-container a:nth-of-type(even){
+    letter-spacing: 1.1px;
+    white-space: nowrap;
+}
+.grades-container{
+    width: 40%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(auto-fill);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    grid-auto-flow: row dense;
+    justify-content: start;
+    align-content: center;
+    justify-items: start;
+    align-items: center;
+}
+.grades-container a:nth-of-type(odd){
+    margin-right: 15px;
+    color: var(--font-color3);
+    white-space: nowrap;
+}
+.grades-container a:nth-of-type(even){
+    white-space: nowrap;
+    letter-spacing: 1.1px;
+}
 .manageStudents{
     width: 100%;
     height: 100%;
-    margin-top: 40px;
+    margin-top: 30px;
     background-color: var(--blue4);
     padding: 20px 30px;
     border-radius: 17px;
 }
 .tableOfStudents{
-    background-color: var(--blue2);
-    padding: 10px;
-    border-collapse: collapse;
-    font-size: 20px;
-    width: 100%;
     height: 100%;
-    text-align: left;
+    gap: 5px;
+    margin-inline: auto;
+    display: flex;
+    border: 2px ;
+}
+.tableOfStudents .table{
+    background-color: var(--blue2);
     border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 1rem;
+    user-select: none;
 }
-.THead th:nth-child(1){
-    width: 5%;
+.THead{
+    font-size: 1.2rem;
+    background-color: var(--blue3);
 }
-.THead th:nth-child(2){
-    width: 45%;
+table th, table td{
+    padding: 14px 10px;
+    overflow: hidden;
 }
-.THead th:nth-child(3){
-    width: 25%;
+.TBody tr{
+    border-bottom: 1px solid var(--font-color4);
 }
-.THead th:nth-child(4){
-    width: 25%;
+.TBody td:nth-child(2):hover{
+    cursor: pointer;
+    color: var(--font-color4);
+    text-decoration: underline;
 }
+.TBody tr:nth-of-type(even){
+    background-color: hsl(0 0% 0% /0.2);
+}
+.TBody tr:nth-of-type(odd){
+    background-color: var(--blue2);
+}
+.table-footer{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+
+
 
 
 
