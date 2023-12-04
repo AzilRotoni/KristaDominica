@@ -22,12 +22,7 @@ const firestore = getFirestore(app);
 document.addEventListener('DOMContentLoaded', function (e) {
     e.preventDefault
 
-<<<<<<< HEAD
     document.body.style.maxWidth = window.screen.width + 'px'
-=======
-    // document.getElementById('Main').style.maxWidth = document.getElementById('Main').innerWidth + 'px';
-    //document.body.style.maxWidth = window.screen.width + 'px'
->>>>>>> e8e314d4ec81d4a97fa7de54ab574acc39985cd3
     closeSidebar();
 
     //Prevent unwanted users
@@ -458,8 +453,8 @@ function checkScreenWidth() {
     // document.body.style.maxWidth = window.innerWidth + "px";
     document.getElementById('Main').style.Width = (window.innerWidth) + "px";
 }
-//window.onload = checkScreenWidth;
-//window.addEventListener("resize", checkScreenWidth);
+window.onload = checkScreenWidth;
+window.addEventListener("resize", checkScreenWidth);
 window.addEventListener("resize", closeSidebar);
 
 //Close Sidebar at 1000px
