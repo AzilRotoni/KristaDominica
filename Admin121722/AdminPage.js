@@ -22,9 +22,32 @@ const firestore = getFirestore(app);
 document.addEventListener('DOMContentLoaded', function (e) {
     e.preventDefault
 
-    // document.getElementById('Main').style.maxWidth = document.getElementById('Main').innerWidth + 'px';
     document.body.style.maxWidth = window.screen.width + 'px'
     closeSidebar();
+
+    //Prevent unwanted users
+    let isAdmin = sessionStorage.getItem('isAdmin');
+    if (!sessionStorage.getItem('reloaded')) {
+        async function checkUserCredentials() {
+            const username = sessionStorage.getItem('username');
+            if (isAdmin === null) {
+                const usersCollection = collection(firestore, 'Admin');
+                const q = query(usersCollection, where('username', '==', username));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    isAdmin = true;
+                } else {
+                    isAdmin = false;
+                    sessionStorage.clear();
+                    window.location.href = 'index.html';
+                }
+                // Cache the isAdmin status
+                sessionStorage.setItem('isAdmin', isAdmin);
+            }
+        }
+        checkUserCredentials();
+    }
+    sessionStorage.setItem('reloaded', 'yes');
     
     // Load the Animated SVG
     let fname = sessionStorage.getItem('FirstName')
@@ -77,36 +100,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }, 3000); //3000
         }
     }
-
-    //Prevent unwanted users
-    let isAdmin = sessionStorage.getItem('isAdmin');
-    if (!sessionStorage.getItem('reloaded')) {
-        async function checkUserCredentials() {
-            const username = sessionStorage.getItem('username');
-            if (isAdmin === null) {
-                const usersCollection = collection(firestore, 'Admin');
-                const q = query(usersCollection, where('username', '==', username));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    isAdmin = true;
-                } else {
-                    isAdmin = false;
-                    sessionStorage.clear();
-                    window.location.href = 'index.html';
-                }
-                // Cache the isAdmin status
-                sessionStorage.setItem('isAdmin', isAdmin);
-            }
-        }
-        checkUserCredentials();
-    }else{
-        if (typeof(Storage) !== "undefined") {
-            window.addEventListener('beforeunload', function() {
-                // sessionStorage.clear();
-            });
-        }   
-    }
-    sessionStorage.setItem('reloaded', 'yes');
 
     //Tool Tip
     const navLinks = document.querySelectorAll(".side-navlink1, .side-navlink2[data-tooltip]:not(:empty)");
@@ -257,12 +250,30 @@ document.addEventListener('DOMContentLoaded', function (e) {
             });
         }
     }
+        document.getElementById('TBody').addEventListener('click', function (event) {
+        if (event.target.tagName === 'TD' && event.target.cellIndex === 1) {
+            
+            const matchName = JSON.parse(sessionStorage.getItem('AllStudents'));
+            matchName.forEach((name) =>{
+                const fullname = name.fullName;
+                const selectedname = event.target.textContent;
+                if(fullname === selectedname){
+                    document.querySelector('.nameInput').value = event.target.textContent;
+                    // document.querySelector('.text-info').textContent = `${name.FName}'s Information`;
+                    // document.querySelector('.studentInfo-content').style.display = 'flex'
+                }
+            });
+        }
+    });
 });
             
 async function fillTable(selectedSection){
-    console.log(selectedSection);
+    document.querySelector('.nameInput').removeAttribute('disabled');
+    document.querySelector('.nameInput').value = ''
     let matchingDocumentData = [];
-    if(!sessionStorage.getItem(selectedSection)){
+    console.log(!sessionStorage.getItem('isStudentsCollected'));
+    if(!sessionStorage.getItem('isStudentsCollected')){
+        sessionStorage.setItem('isStudentsCollected', 'yes')
         const studentsCollectionRef = collection(firestore, 'MyStudents');
         getDocs(studentsCollectionRef)
         .then((querySnapshot) => {
@@ -281,8 +292,23 @@ async function fillTable(selectedSection){
                     };
                     matchingDocumentData.push(documentData);
                     sessionStorage.setItem(`${data["Section"]} - ${ data["Last Name"]}, ${ data["First Name"]}`, JSON.stringify(matchingDocumentData));
+                }else{
+                    const fullName = `${data["Last Name"]}, ${data["First Name"]} ${data["Middle Name"]+'.' || ''}`;
+                    const documentData = {
+                        id: doc.id,
+                        FName: data["First Name"],
+                        LName: data["Last Name"],
+                        MName: data["Middle Name"],
+                        gender: data["Gender"],
+                        section: data["Section"],
+                        fullName: fullName.trim()
+                    };
+                    matchingDocumentData.push(documentData);
+                    sessionStorage.setItem(`${data["Section"]} - ${ data["Last Name"]}, ${ data["First Name"]}`, JSON.stringify(matchingDocumentData));
                 }
+                sessionStorage.setItem('AllStudents', JSON.stringify(matchingDocumentData));
             });
+            
         })
         .catch((error) =>{
 
@@ -291,31 +317,119 @@ async function fillTable(selectedSection){
             const tbody = document.getElementById('TBody');
             tbody.innerHTML = '';
             let counter = 1;
-            matchingDocumentData.forEach((data) => {
-            const newRow = document.createElement('tr');
-            const numberCell = document.createElement('td');
-            numberCell.textContent = counter++;
-            newRow.appendChild(numberCell);
+            matchingDocumentData.forEach((data)=>{
+                if(data.section === selectedSection){
+                        const newRow = document.createElement('tr');
+                        const numberCell = document.createElement('td');
+                        numberCell.textContent = counter++;
+                        newRow.appendChild(numberCell);
 
-            const columns = ['fullName', 'gender', 'section'];
-            
-            columns.forEach((column) => {
-                const cell = document.createElement('td');
-                cell.textContent = data[column];
-                newRow.appendChild(cell);
-            });
+                        const columns = ['fullName', 'gender', 'section'];
+                        
+                        columns.forEach((column) => {
+                            const cell = document.createElement('td');
+                            cell.textContent = data[column];
+                            newRow.appendChild(cell);
+                        });
 
-            tbody.appendChild(newRow);
-            });
-
-        })
-
-        // sessionStorage.setItem(selectedSection, 'yes')
+                        tbody.appendChild(newRow);
+                        createULelement(data.section)
+                    }
+                })
+            })
     }else{
-        console.log('luh');
-        
+        const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+        const tbody = document.getElementById('TBody');
+        tbody.innerHTML = '';
+        let counter = 1;
+        documentData.forEach((data)=>{
+            if(data.section === selectedSection){
+                const newRow = document.createElement('tr');
+                const numberCell = document.createElement('td');
+                numberCell.textContent = counter++;
+                newRow.appendChild(numberCell);
+                const columns = ['fullName', 'gender', 'section'];
+                columns.forEach((column) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = data[column];
+                    newRow.appendChild(cell);
+                });
+                tbody.appendChild(newRow);
+                createULelement(data.section)
+            }
+        })
     }
 }
+
+//Search Engine
+const ulElement = document.createElement('ul');
+const findNamesDiv = document.querySelector('.find-names');
+const nameInput = document.querySelector('.nameInput');
+let currentSection;
+
+function updateName(x) {
+    nameInput.value = x.innerText;
+    findNamesDiv.style.display = 'none';
+}
+
+function createULelement(section) {
+    const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+    findNamesDiv.innerHTML = '';
+    ulElement.innerHTML = '';
+    console.log(section);
+
+    documentData.forEach(student => {
+        if (student.section === section) {
+            const liElement = document.createElement('li');
+            liElement.textContent = student.fullName;
+            liElement.addEventListener('click', function () {
+                updateName(this);
+            });
+            ulElement.appendChild(liElement);
+        }
+    });
+
+    findNamesDiv.appendChild(ulElement);
+    currentSection = section;
+}
+
+nameInput.addEventListener('input', () => {
+    findNamesDiv.style.display = 'flex';
+    const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+    let enteredValue = nameInput.value.toLowerCase();
+
+    const filteredStudents = documentData.filter(student =>
+        student.section === currentSection &&
+        student.fullName.toLowerCase().split(' ').some(word => word.startsWith(enteredValue))
+    );
+
+    if (filteredStudents.length > 0) {
+        let arr = filteredStudents.map(student => `<li>${student.fullName}</li>`).join("");
+        ulElement.innerHTML = arr;
+    } else {
+        ulElement.innerHTML = '';
+    }
+});
+ulElement.addEventListener('click', function (event) {
+    const target = event.target;
+    if (target.tagName === 'LI') {
+        nameInput.value = target.innerText;
+        const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+        const matchingStudent = documentData.find(student => student.fullName === target.innerText);
+        
+        if (matchingStudent) {
+            console.log('Match found:', matchingStudent.fullName);
+        }
+        updateName(this)
+    }
+});
+nameInput.addEventListener("blur", () => {
+    findNamesDiv.style.display = 'none';
+});
+ulElement.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+});
+
 // Check screen width and redirect if below 768
 function checkScreenWidth() {
     const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
