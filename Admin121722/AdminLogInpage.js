@@ -117,14 +117,15 @@ function checkScreenWidth() {
         document.getElementById('page-404').style.display = 'block'
         document.getElementById('particles-js').style.display = 'none'
         document.getElementById('main').style.display = 'none'
-    }else{
+    }
+    else{
         document.getElementById('main').style.display = 'flex'
         document.getElementById('page-404').style.display = 'none'
         document.getElementById('particles-js').style.display = 'block'
     }
 }
-//window.onload = checkScreenWidth;
-//window.addEventListener("resize", checkScreenWidth);
+window.onload = checkScreenWidth;
+window.addEventListener("resize", checkScreenWidth);
 
 //Show Password
 const showPassword = document.getElementById("isShowPassword")

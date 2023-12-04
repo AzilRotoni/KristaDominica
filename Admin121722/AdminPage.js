@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             sideNav.classList = 'side-navbar-container';
             document.getElementById('Main').style.display = 'block';
             document.getElementById('side-navbar-container').style.display = 'flex';
-
+            checkScreenWidth()
         }, 3000); //3000
         }
     }
@@ -433,12 +433,21 @@ ulElement.addEventListener('mousedown', (event) => {
 // Check screen width and redirect if below 768
 function checkScreenWidth() {
     const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    if (screenWidth <= 770) {
-        document.getElementById('Main').style.display = 'none';
-        document.getElementById('side-navbar-container').style.display = 'none';
-        document.getElementById('page-404').style.display = 'block'
-    }else if(screenWidth >= 770 && sessionStorage.getItem('animationShow')){
 
+    if (screenWidth <= 770) {
+        console.log('test3');
+                if(document.querySelector('.Main')){
+            console.log('test2-a');
+            document.querySelector('.Main').style.display = 'none';        
+            document.querySelector('.side-navbar-container').style.display = 'none';
+            document.getElementById('page-404').style.display = 'block'
+        }else{
+            console.log('test2-b');
+            document.querySelector('.svg-container').style.display = 'none';
+            document.querySelector('.hidden-Main').style.display = 'none';
+            document.querySelector('.hidden-side-navbar-container').style.display = 'none';
+            document.getElementById('page-404').style.display = 'block'
+        }
     }else if(!sessionStorage.getItem('animationShow') && screenWidth >= 770){
         if(document.querySelector('.Main')){
             document.querySelector('.Main').style.display = 'block';        
@@ -450,8 +459,6 @@ function checkScreenWidth() {
             document.getElementById('page-404').style.display = 'none'
         }
     }
-    // document.body.style.maxWidth = window.innerWidth + "px";
-    document.getElementById('Main').style.Width = (window.innerWidth) + "px";
 }
 window.onload = checkScreenWidth;
 window.addEventListener("resize", checkScreenWidth);
