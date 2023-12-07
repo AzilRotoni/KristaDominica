@@ -507,6 +507,9 @@ START
     overflow: hidden;
     transition: all 0.3s;
 }
+.Btn:last-child{
+    display: none;
+}
 .Btn:hover {
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.336);
     background-color: var(--blue2);
@@ -520,6 +523,220 @@ START
 }
 .Btn:active{
     transform: scale(0.8);
+}
+
+
+.radioInput-container{
+    display: flex;
+    justify-content: end;
+    margin-left: auto;
+    padding: 0px 35px 10px 0;
+}
+.radio-input input {
+    display: none;
+} 
+.radio-input {
+    --container_width: 250px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    border-radius: 10px;
+    background-color: var(--blue2);
+    color: #000000;
+    width: var(--container_width);
+    overflow: hidden;
+    border: 1px solid rgba(53, 52, 52, 0.5);
+}
+.radio-input label {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    font-size: 15px;
+}
+.selection {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: calc(var(--container_width) / 2);
+    z-index: 0;
+    left: 0;
+    top: 0;
+    transition: .15s ease;
+}
+.radio-input label:has(input:checked) ~ .selection {
+    background-color:  var(--font-color3);
+    display: inline-block;
+}
+.radio-input label:nth-child(1):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 0/2));
+}
+.radio-input label:nth-child(2):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 1/2));
+}
+
+.studentInfo-add{
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+.addSection-container{
+    padding: 25px 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+.addSection-container .gr_sec{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.form__group {
+    position: relative;
+    padding: 20px 0 0;
+    width: 100%;
+    max-width: 500px;
+}
+.addSection-container .gr_sec:last-child .form__group{
+    width: 100%;
+    max-width: 620px;
+}
+.addSection-container .form__group:first-child {
+    position: relative;
+    padding: 20px 0 0;
+    width: 100%;
+    max-width: 100px;
+}
+.form__field {
+    font-family: inherit;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #9b9b9b;
+    outline: 0;
+    font-size: 17px;
+    color: #fff;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+.form__field::placeholder {
+    color: transparent;
+}
+.form__field:placeholder-shown ~ .form__label {
+    font-size: 17px;
+    cursor: text;
+    top: 20px;
+}
+.form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #9b9b9b;
+    pointer-events: none;
+}
+.form__field:focus {
+    padding-bottom: 6px;
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #116399, #38caef);
+    border-image-slice: 1;
+}
+.form__field:focus ~ .form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #38caef;
+    font-weight: 700;
+}
+.form__field:required, .form__field:invalid {
+    box-shadow: none;
+}
+.gr_sec .form__group ul{
+    display: none;
+}
+
+.addStudent-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 30px;
+    gap: 20px;
+    width: 100%;
+
+    display: none;
+}
+.nameContainer{
+    display: flex;
+    max-width: 740px;
+    width: 100%;
+    align-items: center;
+}
+.addStudent-container div{
+    display: flex;
+    gap: 10px;
+}
+.addStudent-container div:last-child{
+    display: flex;
+    width: 100%;
+}
+.addNewStudent-info{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+}
+.addNewStudent-gr_sec{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+}
+.addNewStudent-info .form__group ul,
+.addNewStudent-gr_sec .form__group ul{
+    display: none;
+}
+.addNewStudent-info .form__group:first-child{
+    max-width: 100px;
+    margin-right: 50px;
+}
+.addNewStudent-gr_sec .form__group:first-child{
+    max-width: 100px;
+    margin-right: 10px;
+}
+.addNewStudent-info .form__group:last-child{
+    width: 100%;
+    max-width: 580px;
+}
+.addNewStudent-gr_sec .form__group:last-child{
+    width: 100%;
+    max-width: 620px;
+}
+
+.addBTNs-container{
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: end;
+    padding-inline: 35px;
+
+    display: none;
 }
 
 .studentInfo-container{
@@ -580,22 +797,26 @@ START
     height: 100%;
     display: grid;
     grid-template-rows: repeat(auto-fill);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 45%);
     gap: 8px;
     grid-auto-flow: row dense;
-    justify-content: start;
+    justify-content: center;
     align-content: center;
-    justify-items: start;
     align-items: center;
     letter-spacing: 0.5px;
 }
-.information-container a:nth-of-type(odd){
-    margin-right: 15px;
+.studentInfo-header,
+.studentInfo-content{
+    width: 100%;
+}
+
+.information-container a,
+.grades-container a{
+    width: 50%;
+    margin-right: 12px;
     color: var(--font-color3);
     white-space: nowrap;
-}
-.information-container a:nth-of-type(even){
-    letter-spacing: 1.1px;
+    letter-spacing: 0.8px;
     white-space: nowrap;
 }
 .grades-container{
@@ -603,23 +824,101 @@ START
     height: 100%;
     display: grid;
     grid-template-rows: repeat(auto-fill);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 45%);
     gap: 8px;
+    justify-content: center;
     grid-auto-flow: row dense;
-    justify-content: start;
     align-content: center;
     justify-items: start;
     align-items: center;
 }
-.grades-container a:nth-of-type(odd){
-    margin-right: 15px;
-    color: var(--font-color3);
-    white-space: nowrap;
+.information-container input,
+.grades-container input, 
+.grades-container .aveGrade{
+    background-color: var(--blue4);
+    padding: 5px 10px;
+    height: auto;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    user-select: none;
+    border: none;
+    color: #fff;
 }
-.grades-container a:nth-of-type(even){
-    white-space: nowrap;
-    letter-spacing: 1.1px;
+.information-container .open,
+.grades-container .open{
+    background-color: var(--blue1);
+    height: auto;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    user-select: none;
+    border: none;
+    color: #fff;
 }
+.information-container input{
+    min-width: 170px;
+    width: 100%;
+}
+.grades-container input{
+    min-width: 30px;
+    width: 80%;
+}
+.studentBtn-container{
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: end;
+    padding-inline: 35px;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 10px;
+
+    display: none;
+}
+.studentBtn{
+    --button_radius: 0.75em;
+    --button_color: #e8e8e8;
+    --button_outline_color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    border-radius: var(--button_radius);
+    background: var(--button_outline_color);
+}
+.studentBtn .button_top {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid var(--button_outline_color);
+    border-radius: var(--button_radius);
+    padding: 10px 25px;
+    background: var(--button_color);
+    color: var(--button_outline_color);
+    transform: translateY(-0.0.5px);
+    transition: transform 0.1s ease;
+}
+.studentBtn:nth-child(2) .button_top{
+    border: none;
+    background: var(--blue4);
+    color: #fff;
+}
+.studentBtn:nth-child(2) .button_top:hover{
+    background: var(--blue1);
+    color: #fff;
+}
+.studentBtn:last-child .button_top:hover{
+    background: var(--font-color2);
+    color: #fff;
+}
+.studentBtn:hover .button_top{
+    transform: translateY(-0.5px);
+}
+.studentBtn:active .button_top{
+    transform: translateY(0);
+}
+.studentBtn-container h4{
+    font-size: 0.8rem;
+}
+
 .manageStudents{
     width: 100%;
     height: 100%;

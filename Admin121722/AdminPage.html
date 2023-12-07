@@ -88,10 +88,10 @@
                     <div class="find-names"></div>
                 </div>
                 <div class="Btn-container">
-                    <button class="Btn">
+                    <button class="Btn" id="addBTN">
                         <img src="Images/add.svg" alt="">
                       </button>
-                    <button class="Btn">
+                    <button class="Btn" id="editBTN">
                         <img src="Images/edit.svg" alt="">
                       </button>
                 </div>
@@ -107,21 +107,132 @@
                         <h1 class="text-info"></h1>
                     </div>
                 </div>
+                <div class="studentInfo-add">
+                    <div class="radioInput-container">
+                        <div class="radio-input">
+                            <label>
+                            <input value="value-1" name="value-radio" type="radio" checked="" id="addSection">
+                            <span>Add Section</span>
+                            </label>
+                            <label>
+                              <input value="value-2" name="value-radio" type="radio" id="addStudent">
+                            <span>Add Student</span>
+                            </label>
+                            <span class="selection"></span>
+                        </div>
+                    </div>
+                    <div class="addSection-container">
+                        <div class="gr_sec"> 
+                            <div class="form__group field">
+                                <input type="input" class="form__field" placeholder="Name" pattern="^.{8,10}$" required="" id="gradeLVL">
+                                <label class="form__label">Grade Level</label>
+                                <ul>
+                                    <li>7</li>
+                                    <li>8</li>
+                                    <li>9</li>
+                                    <li>10</li>
+                                </ul>
+                            </div>
+                            <div class="form__group field">
+                                <input type="input" class="form__field" placeholder="Name" required="" id="section">
+                                <label  class="form__label">Section</label>
+                            </div>
+                        </div>
+                        <div class="gr_sec"> 
+                            <div class="form__group field">
+                                <input type="input" class="form__field" placeholder="Name" required="" id="adviser">
+                                <label class="form__label">Adviser</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="addStudent-container">
+                    <div class="nameContainer">
+                        <div class="form__group field">
+                            <input type="input" class="form__field" placeholder="" required id="newFName">
+                            <label for="name" class="form__label">First Name</label>
+                        </div>
+                        <div class="form__group field">
+                            <input type="input" class="form__field" placeholder="" required id="newMName">
+                            <label for="name" class="form__label"> Middle Name</label>
+                        </div>
+                        <div class="form__group field">
+                            <input type="input" class="form__field" placeholder="" required id="newLName">
+                            <label for="name" class="form__label">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="addNewStudent-info">
+                        <div class="form__group field">
+                            <input type="input" class="form__field" pattern="^[Mm][Aa][Ll][Ee]|[Ff][Ee][Mm][Aa][Ll][Ee]$" placeholder="" required id="newGender">
+                            <label for="name" class="form__label">Gender</label>
+                            <ul>
+                                <li>Male</li>
+                                <li>Female</li>
+                            </ul>
+                        </div>
+                        <div class="form__group field">
+                            <input type="input" class="form__field" placeholder="" required id="newLRN">
+                            <label for="name" class="form__label">LRN</label>
+                        </div>
+                    </div>
+                    <div class="addNewStudent-gr_sec">
+                          <div class="form__group field">
+                            <input type="input" class="form__field" pattern="^.{8,10}$" placeholder="" required id="newGradeLVL">
+                            <label for="name" class="form__label">Grade Level</label>
+                            <ul>
+                                <li>7</li>
+                                <li>8</li>
+                                <li>9</li>
+                                <li>10</li>
+                            </ul>
+                        </div>
+                          <div class="form__group field">
+                            <input type="input" class="form__field" placeholder="" required id="newSection">
+                            <label for="name" class="form__label">Section</label>
+                            <ul class="AddStudent-section">
+                                <!-- JS Handle li-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="addBTNs-container">
+                    <button class="studentBtn" id="cancel">
+                        <span class="button_top"> Cancel
+                        </span>
+                    </button>
+                    <button class="studentBtn" id="save">
+                        <span class="button_top"> Save
+                        </span>
+                    </button>
+                </div>
                 <div class="studentInfo-content">
                     <div class="information-container">
-                        <a>First Name:</a><a class="FName"></a>
-                        <a>Middle Name:</a><a class="MName"></a>
-                        <a>Last Name:</a><a class="LName"></a>
-                        <a>Gender:</a><a class="gender"></a>
-                        <a>Gr & Section:</a><a class="section"></a>
+                        <a>First Name:</a><input class="FName" disabled>
+                        <a>Middle Name:</a><input class="MName" disabled>
+                        <a>Last Name:</a><input class="LName" disabled>
+                        <a>Gender:</a><input class="gender" disabled>
+                        <a>Grade Level:</a><input class="gradeLVL" disabled>
+                        <a>Section:</a><input class="section" disabled>
+                        <a>LRN:</a><input class="lrn" disabled>
                     </div>
                     <div class="grades-container">
-                        <a>1st Period:</a><a class="period1"></a>
-                        <a>2nd Period:</a><a class="period2"></a>
-                        <a>3rd Period:</a><a class="period3"></a>
-                        <a>4th Period:</a><a class="period4"></a>
-                        <a>Average Grade:</a><a class="aveGrade"></a>
+                        <a>1st Period:</a><input class="period1" disabled>
+                        <a>2nd Period:</a><input class="period2" disabled>
+                        <a>3rd Period:</a><input class="period3" disabled>
+                        <a>4th Period:</a><input class="period4" disabled>
+                        <a>Average:</a><a class="aveGrade"></a>
                     </div>
+                </div>
+                <div class="studentBtn-container">
+                    <h4 class="Notification"></h4>
+                    <button class="studentBtn" id="cancel">
+                        <span class="button_top"> Cancel
+                        </span>
+                    </button>
+                    <button class="studentBtn" id="save">
+                        <span class="button_top"> Save
+                        </span>
+                    </button>
                 </div>
             </div>
             <div class="manageStudents">
