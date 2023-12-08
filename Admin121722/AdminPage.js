@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"; //App
-import { doc, collection, getFirestore, query, where, getDocs, setDoc, addDoc  } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore//
+import { doc, collection, getFirestore, query, where, getDocs, setDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore//
 
 const firebaseConfig = {
     apiKey: "AIzaSyAIlhhNKiXBy2stX9HsebtxaDfB-F535LI",
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     document.body.style.maxWidth = window.screen.width + 'px'
     closeSidebar();
+    fillTable('')
 
     //Prevent unwanted users
     let isAdmin = sessionStorage.getItem('isAdmin');
@@ -204,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     }
         document.getElementById('TBody').addEventListener('click', function (event) {
         if (event.target.tagName === 'TD' && event.target.cellIndex === 1) {
-            const matchName = JSON.parse(sessionStorage.getItem('AllStudents'));
+            const matchName = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
             matchName.forEach((name) =>{
                 const fullname = name.fullName;
                 const selectedname = event.target.textContent;
@@ -227,45 +228,23 @@ async function fillTable(selectedSection){
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                if (data.Section === selectedSection) {
-                    const fullName = `${data["Last Name"]}, ${data["First Name"]} ${(data["Middle Name"] && data["Middle Name"][0] + '.') || ''}`;
-                    const documentData = {
-                        id: doc.id,
-                        FName: data["First Name"],
-                        LName: data["Last Name"],
-                        MName: data["Middle Name"],
-                        gender: data["Gender"],
-                        gradeLVL: data["Grade"],
-                        section: data["Section"],
-                        LRN: data["LRN"],
-                        period1: data["Prelim"],
-                        period2: data["Midterm"],
-                        period3: data["Pre-Finals"],
-                        period4: data["Finals"],
-                        fullName: fullName.trim()
+                const fullName = `${data["Last Name"]}, ${data["First Name"]} ${(data["Middle Name"] && data["Middle Name"][0] + '.') || ''}`;
+                const documentData = {
+                    id: doc.id,
+                    FName: data["First Name"],
+                    LName: data["Last Name"],
+                    MName: data["Middle Name"],
+                    gender: data["Gender"],
+                    gradeLVL: data["Grade"],
+                    section: data["Section"],
+                    LRN: data["LRN"],
+                    period1: data["1st Period"],
+                    period2: data["2nd Period"],
+                    period3: data["3rd Period"],
+                    period4: data["4th Period"],
+                    fullName: fullName.trim()
                     };
                     matchingDocumentData.push(documentData);
-                    sessionStorage.setItem(`${data["Section"]} - ${ data["Last Name"]}, ${ data["First Name"]}`, JSON.stringify(matchingDocumentData));
-                }else{
-                    const fullName = `${data["Last Name"]}, ${data["First Name"]} ${(data["Middle Name"] && data["Middle Name"][0] + '.') || ''}`;
-                    const documentData = {
-                        id: doc.id,
-                        FName: data["First Name"],
-                        LName: data["Last Name"],
-                        MName: data["Middle Name"],
-                        gender: data["Gender"],
-                        gradeLVL: data["Grade"],
-                        section: data["Section"],
-                        LRN: data["LRN"],
-                        period1: data["Prelim"],
-                        period2: data["Midterm"],
-                        period3: data["Pre-Finals"],
-                        period4: data["Finals"],
-                        fullName: fullName.trim()
-                    };
-                    matchingDocumentData.push(documentData);
-                    sessionStorage.setItem(`${data["Section"]} - ${ data["Last Name"]}, ${ data["First Name"]}`, JSON.stringify(matchingDocumentData));
-                }
                 matchingDocumentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
                 sessionStorage.setItem('AllStudents', JSON.stringify(matchingDocumentData));
             });
@@ -287,7 +266,7 @@ async function fillTable(selectedSection){
                         numberCell.textContent = counter++;
                         newRow.appendChild(numberCell);
 
-                        const columns = ['fullName', 'gender', 'section'];
+                        const columns = ['fullName', 'gender', 'LRN'];
                         
                         columns.forEach((column) => {
                             const cell = document.createElement('td');
@@ -301,7 +280,7 @@ async function fillTable(selectedSection){
                 })
             })
     }else{
-        const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+        const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
         documentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
         const tbody = document.getElementById('TBody');
         tbody.innerHTML = '';
@@ -312,7 +291,7 @@ async function fillTable(selectedSection){
                 const numberCell = document.createElement('td');
                 numberCell.textContent = counter++;
                 newRow.appendChild(numberCell);
-                const columns = ['fullName', 'gender', 'section'];
+                const columns = ['fullName', 'gender', 'LRN'];
                 columns.forEach((column) => {
                     const cell = document.createElement('td');
                     cell.textContent = data[column];
@@ -347,7 +326,7 @@ const findNamesDiv = document.querySelector('.find-names');
 const nameInput = document.querySelector('.nameInput');
 let currentSection;
 function updateName(x) {
-    const persons = JSON.parse(sessionStorage.getItem('AllStudents'));
+    const persons = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
     persons.forEach((person) =>{
         if(person.fullName === x){
             document.querySelector('.Btn-container .Btn:last-child').style.display = 'block';
@@ -378,7 +357,7 @@ function updateName(x) {
     })
 }
 function createULelement(section) {
-    const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+    const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
     findNamesDiv.innerHTML = '';
     ulElement.innerHTML = '';
     documentData.forEach(student => {
@@ -398,7 +377,7 @@ function createULelement(section) {
 
 nameInput.addEventListener('input', () => {
     findNamesDiv.style.display = 'flex';
-    const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+    const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
     let enteredValue = nameInput.value.trim().toLowerCase();
 
     const filteredStudents = documentData.filter(student =>
@@ -422,7 +401,7 @@ ulElement.addEventListener('click', function (event) {
     const target = event.target;
     if (target.tagName === 'LI') {
         nameInput.value = target.innerText;
-        const documentData = JSON.parse(sessionStorage.getItem('AllStudents'));
+        const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
         const matchingStudent = documentData.find(student => student.fullName === target.innerText);
         
         if (matchingStudent) {
@@ -624,7 +603,7 @@ const studentInfAadd = document.querySelector('.studentInfo-add')
 const addSection = document.querySelector('.addSection-container')
 const addStudent = document.querySelector('.addStudent-container')
 const radioButtons = document.querySelectorAll('input[name="value-radio"]');
-const formInput = document.querySelector('.form__group')
+const formInput = document.querySelector('.InputForm')
 addBTN.addEventListener('click', () => {
     notif.innerText = ''
     studentInfo.style.display = 'none'
@@ -673,18 +652,18 @@ editcancelBTN.addEventListener('click', () =>{
         radioButtons[0].checked = true;
 
         //Add Section
-        document.querySelector('.form__group #gradeLVL').value = ''
-        document.querySelector('.form__group #section').value = ''
-        document.querySelector('.form__group #adviser').value = ''
+        document.querySelector('.InputForm #gradeLVL').value = ''
+        document.querySelector('.InputForm #section').value = ''
+        document.querySelector('.InputForm #adviser').value = ''
 
         //Add Student
-        document.querySelector('.form__group #newFName').value = ''
-        document.querySelector('.form__group #newMName').value = ''
-        document.querySelector('.form__group #newLName').value = ''
-        document.querySelector('.form__group #newGender').value = ''
-        document.querySelector('.form__group #newLRN').value = ''
-        document.querySelector('.form__group #newGradeLVL').value = ''
-        document.querySelector('.form__group #newSection').value = ''
+        document.querySelector('.InputForm #newFName').value = ''
+        document.querySelector('.InputForm #newMName').value = ''
+        document.querySelector('.InputForm #newLName').value = ''
+        document.querySelector('.InputForm #newGender').value = ''
+        document.querySelector('.InputForm #newLRN').value = ''
+        document.querySelector('.InputForm #newGradeLVL').value = ''
+        document.querySelector('.InputForm #newSection').value = ''
 
         addBTN.style.display = "flex"
         addStudent.style.display = 'none'
@@ -713,7 +692,7 @@ editsaveBTN.addEventListener('click', async () =>{
             inputElement.setAttribute('disabled', '');
         });
 
-        const students = JSON.parse(sessionStorage.getItem('AllStudents'));
+        const students = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
         students.forEach(async (student) =>{
             if(nameInput.value === student.fullName){
                 const lastName = document.querySelector('.information-container .LName').value;
@@ -729,10 +708,10 @@ editsaveBTN.addEventListener('click', async () =>{
                     gradeLVL: 'Grade',
                     section: 'Section',
                     LRN: 'LRN',
-                    period1: 'Prelim',
-                    period2: 'Midterm',
-                    period3: 'Pre-Finals',
-                    period4: 'Finals',
+                    period1: '1st Period',
+                    period2: '2nd Period',
+                    period3: '3rd Period',
+                    period4: '4th Period',
                 };
 
                 const documentData = {
@@ -759,13 +738,13 @@ editsaveBTN.addEventListener('click', async () =>{
                 sessionStorage.removeItem(`${student.section} - ${student.LName}, ${student.FName}`);
                 sessionStorage.setItem(`${documentData.section} - ${documentData.LName}, ${documentData.FName}`, JSON.stringify(documentData));
 
-                const existingData = JSON.parse(sessionStorage.getItem('AllStudents')) || [];
+                const existingData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
                 const updatedSessionStorageData = existingData.map((data) => (data.id === documentData.id ? documentData : data));
                 sessionStorage.setItem('AllStudents', JSON.stringify(updatedSessionStorageData));
 
                 const studentDocRef = doc(firestore, 'MyStudents', documentData.id);
                 try {
-                    await setDoc(studentDocRef, updatedFields, { merge: true });
+                   await setDoc(studentDocRef, updatedFields, { merge: true });
                 } catch (error) {
                 }
 
@@ -776,11 +755,11 @@ editsaveBTN.addEventListener('click', async () =>{
         })
         isEditBTN = false
     }else if(!isEditBTN){
-        if(radioButtons[0].checked === true && document.querySelector('.form__group #section').value !== ''
-                                            && document.querySelector('.form__group #adviser').value !== '' 
-                                            &&document.querySelector('.form__group #gradeLVL').value !== ''){
+        if(radioButtons[0].checked === true && document.querySelector('.InputForm #section').value !== ''
+                                            && document.querySelector('.InputForm #adviser').value !== '' 
+                                            &&document.querySelector('.InputForm #gradeLVL').value !== ''){
             const sectionData = JSON.parse(sessionStorage.getItem('sectionData'))
-            const Section = document.querySelector('.form__group #section').value
+            const Section = document.querySelector('.InputForm #section').value
 
             const existingDocumentKey = Object.keys(sectionData).find(key =>
                 sectionData[key][0] === Section
@@ -792,9 +771,9 @@ editsaveBTN.addEventListener('click', async () =>{
                 const documentRef = doc(firestore, 'Sections', '7NBxz8gZyZWz9QgwsYOL');
                 const documentData = {
                     [Section]: [
-                        document.querySelector('.form__group #section').value,
-                        document.querySelector('.form__group #adviser').value,
-                        document.querySelector('.form__group #gradeLVL').value
+                        document.querySelector('.InputForm #section').value,
+                        document.querySelector('.InputForm #adviser').value,
+                        document.querySelector('.InputForm #gradeLVL').value
                     ],
                 };
                 setDoc(documentRef, documentData, { merge: true });
@@ -802,13 +781,13 @@ editsaveBTN.addEventListener('click', async () =>{
                 document.querySelector('.dropdown .selected').textContent = Section
                 const sectionData = JSON.parse(sessionStorage.getItem('sectionData'))
                 sectionData[Section] = [
-                    document.querySelector('.form__group #section').value,
-                    document.querySelector('.form__group #adviser').value,
-                    document.querySelector('.form__group #gradeLVL').value
+                    document.querySelector('.InputForm #section').value,
+                    document.querySelector('.InputForm #adviser').value,
+                    document.querySelector('.InputForm #gradeLVL').value
                 ]
                 sessionStorage.setItem('sectionData', JSON.stringify(sectionData));
 
-                document.querySelector('.dropdown .selected').textContent = `G${document.querySelector('.form__group #gradeLVL').value} - ${Section}`
+                document.querySelector('.dropdown .selected').textContent = `G${document.querySelector('.InputForm #gradeLVL').value} - ${Section}`
                 const ul_menu = document.getElementById('menu');
                 ul_menu.innerHTML = ''
                 const fieldNames = Object.keys(sectionData);
@@ -828,17 +807,17 @@ editsaveBTN.addEventListener('click', async () =>{
                 dropdown.querySelector('.select').addEventListener('click', toggleDropdown);
 
                 fillTable(Section)
-                document.querySelector('.form__group #gradeLVL').value = ''
-                document.querySelector('.form__group #section').value = ''
-                document.querySelector('.form__group #adviser').value = ''
+                document.querySelector('.InputForm #gradeLVL').value = ''
+                document.querySelector('.InputForm #section').value = ''
+                document.querySelector('.InputForm #adviser').value = ''
 
-                document.querySelector('.form__group #newFName').value = ''
-                document.querySelector('.form__group #newMName').value = ''
-                document.querySelector('.form__group #newLName').value = ''
-                document.querySelector('.form__group #newGender').value = ''
-                document.querySelector('.form__group #newLRN').value = ''
-                document.querySelector('.form__group #newGradeLVL').value = ''
-                document.querySelector('.form__group #newSection').value = ''
+                document.querySelector('.InputForm #newFName').value = ''
+                document.querySelector('.InputForm #newMName').value = ''
+                document.querySelector('.InputForm #newLName').value = ''
+                document.querySelector('.InputForm #newGender').value = ''
+                document.querySelector('.InputForm #newLRN').value = ''
+                document.querySelector('.InputForm #newGradeLVL').value = ''
+                document.querySelector('.InputForm #newSection').value = ''
 
                 addBTN.style.display = "flex"
                 studentBtn.style.display = 'none';
@@ -848,68 +827,69 @@ editsaveBTN.addEventListener('click', async () =>{
 
                 studentInfAadd.style.display = 'none'
             }
-        }else if(radioButtons[1].checked === true && document.querySelector('.form__group #newFName').value !== ''
-                                            &&document.querySelector('.form__group #newLName').value !== ''
-                                            &&document.querySelector('.form__group #newGender').value !== ''
-                                            &&document.querySelector('.form__group #newLRN').value !== ''
-                                            &&document.querySelector('.form__group #newGradeLVL').value !== ''
-                                            &&document.querySelector('.form__group #newSection').value !== ''){
+        }else if(radioButtons[1].checked === true && document.querySelector('.InputForm #newFName').value !== ''
+                                            &&document.querySelector('.InputForm #newLName').value !== ''
+                                            &&document.querySelector('.InputForm #newGender').value !== ''
+                                            &&document.querySelector('.InputForm #newLRN').value !== ''
+                                            &&document.querySelector('.InputForm #newGradeLVL').value !== ''
+                                            &&document.querySelector('.InputForm #newSection').value !== ''){
             const documentRef = collection(firestore, 'MyStudents');
             addDoc(documentRef , {
-                'First Name' : document.querySelector('.form__group #newFName').value,
-                'Middle Name' : document.querySelector('.form__group #newMName').value,
-                'Last Name' : document.querySelector('.form__group #newLName').value,
-                'LRN' : document.querySelector('.form__group #newLRN').value,
-                'Gender' : document.querySelector('.form__group #newGender').value,
-                'Grade' : parseInt(document.querySelector('.form__group #newGradeLVL').value),
-                'Section' : document.querySelector('.form__group #newSection').value,
+                'First Name' : document.querySelector('.InputForm #newFName').value,
+                'Middle Name' : document.querySelector('.InputForm #newMName').value,
+                'Last Name' : document.querySelector('.InputForm #newLName').value,
+                'LRN' : document.querySelector('.InputForm #newLRN').value,
+                'Gender' : document.querySelector('.InputForm #newGender').value,
+                'Grade' : parseInt(document.querySelector('.InputForm #newGradeLVL').value),
+                'Section' : document.querySelector('.InputForm #newSection').value,
 
-                '1st Period' : parseInt(''),
-                '2nd Period' : parseInt(''),
-                '3rd Period' : parseInt(''),
-                '4th Period' : parseInt(''),
+                '1st Period' : NaN,
+                '2nd Period' : NaN,
+                '3rd Period' : NaN,
+                '4th Period' : NaN,
             });
             addBTN.style.display = "flex"
             studentBtn.style.display = 'none';
             dropdown.style.pointerEvents = 'auto';
             nameInput.style.pointerEvents = 'auto';
             table.style.pointerEvents = 'auto';
+            const docId = documentRef.id;
 
-            const sec = document.querySelector('.form__group #newSection').value;
+            const sec = document.querySelector('.InputForm #newSection').value;
             document.querySelector('.dropdown .selected').textContent = sec
 
-            const AllStudents = JSON.parse(sessionStorage.getItem('AllStudents'))
-            const fullName = `${document.querySelector('.form__group #newLName').value}, ${document.querySelector('.form__group #newFName').value} ${(document.querySelector('.form__group #newMName').value && (document.querySelector('.form__group #newMName').value)[0] + '.') || ''}`;
+            const AllStudents = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
+            const fullName = `${document.querySelector('.InputForm #newLName').value}, ${document.querySelector('.InputForm #newFName').value} ${(document.querySelector('.InputForm #newMName').value && (document.querySelector('.InputForm #newMName').value)[0] + '.') || ''}`;
             const documentData = {
-                FName: document.querySelector('.form__group #newFName').value,
-                LName: document.querySelector('.form__group #newMName').value,
-                MName: document.querySelector('.form__group #newLName').value,
-                gender: document.querySelector('.form__group #newGender').value,
-                gradeLVL: parseInt(document.querySelector('.form__group #newGradeLVL').value),
-                section: document.querySelector('.form__group #newSection').value,
-                LRN: document.querySelector('.form__group #newLRN').value,
-                period1: parseInt(''),
-                period2: parseInt(''),
-                period3: parseInt(''),
-                period4: parseInt(''),
+                id: docId,
+                FName: document.querySelector('.InputForm #newFName').value,
+                LName: document.querySelector('.InputForm #newLName').value,
+                MName: document.querySelector('.InputForm #newMName').value,
+                gender: document.querySelector('.InputForm #newGender').value,
+                gradeLVL: parseInt(document.querySelector('.InputForm #newGradeLVL').value),
+                section: document.querySelector('.InputForm #newSection').value,
+                LRN: document.querySelector('.InputForm #newLRN').value,
+                period1: NaN,
+                period2: NaN,
+                period3: NaN,
+                period4: NaN,
                 fullName: fullName.trim()
             };
             AllStudents.push(documentData);
-            console.log(AllStudents);
             sessionStorage.setItem('AllStudents', JSON.stringify(AllStudents));
             fillTable(sec)
 
-            document.querySelector('.form__group #gradeLVL').value = ''
-            document.querySelector('.form__group #section').value = ''
-            document.querySelector('.form__group #adviser').value = ''
+            document.querySelector('.InputForm #gradeLVL').value = ''
+            document.querySelector('.InputForm #section').value = ''
+            document.querySelector('.InputForm #adviser').value = ''
 
-            document.querySelector('.form__group #newFName').value = ''
-            document.querySelector('.form__group #newMName').value = ''
-            document.querySelector('.form__group #newLName').value = ''
-            document.querySelector('.form__group #newGender').value = ''
-            document.querySelector('.form__group #newLRN').value = ''
-            document.querySelector('.form__group #newGradeLVL').value = ''
-            document.querySelector('.form__group #newSection').value = ''
+            document.querySelector('.InputForm #newFName').value = ''
+            document.querySelector('.InputForm #newMName').value = ''
+            document.querySelector('.InputForm #newLName').value = ''
+            document.querySelector('.InputForm #newGender').value = ''
+            document.querySelector('.InputForm #newLRN').value = ''
+            document.querySelector('.InputForm #newGradeLVL').value = ''
+            document.querySelector('.InputForm #newSection').value = ''
 
             addBTN.style.display = "flex"
             studentBtn.style.display = 'none';
@@ -980,3 +960,84 @@ function toggleDropdown() {
     caret.classList.toggle('caret-rotate');
     menu.classList.toggle('menu-open');
 }
+
+const gradeLVL_dropdown = document.getElementById('gradeLVL');
+const gradeList = document.getElementById('gradeList');
+gradeLVL_dropdown.addEventListener('focus', () => {
+  gradeList.style.display = 'flex';
+});
+gradeLVL_dropdown.addEventListener('blur', () => {
+    setTimeout(() => {
+        gradeList.style.display = 'none';
+    }, 200);
+});
+gradeList.addEventListener('click', (event) => {
+  if (event.target.tagName === 'LI') {
+    gradeLVL_dropdown.value = event.target.innerText;
+    gradeList.style.display = 'none';
+  }
+});
+
+const newGrade = document.getElementById('newGradeLVL');
+const newGradeList = document.getElementById('newGradeList');
+newGrade.addEventListener('focus', () => {
+  newGradeList.style.display = 'flex';
+});
+newGrade.addEventListener('blur', () => {
+    setTimeout(() => {
+        newGradeList.style.display = 'none';
+    }, 200);
+});
+newGradeList.addEventListener('click', (event) => {
+  if (event.target.tagName === 'LI') {
+    newGrade.value = event.target.innerText;
+    newGradeList.style.display = 'none';
+  }
+});
+const newGender = document.getElementById('newGender');
+const genderList = document.getElementById('genderList');
+newGender.addEventListener('focus', () => {
+  genderList.style.display = 'flex';
+});
+newGender.addEventListener('blur', () => {
+    setTimeout(() => {
+        genderList.style.display = 'none';
+    }, 200);
+});
+genderList.addEventListener('click', (event) => {
+  if (event.target.tagName === 'LI') {
+    newGender.value = event.target.innerText;
+    genderList.style.display = 'none';
+  }
+});
+
+const section = document.querySelector('.InputForm #newSection');
+const sectionListElement = document.getElementById('SectionList');
+section.addEventListener('focus', () =>{
+    sectionListElement.style.display = 'flex';
+
+    sectionListElement.innerHTML = ''
+    const sectionData = JSON.parse(sessionStorage.getItem('sectionData'))
+
+    const fieldNames = Object.keys(sectionData);
+    fieldNames.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    fieldNames.forEach((fieldName) => {
+        const fieldValue = sectionData[fieldName];
+        if (Array.isArray(fieldValue) && fieldValue.length > 0) {
+            const li = document.createElement('li');
+            li.textContent = `${fieldValue[0]}`;
+            sectionListElement.appendChild(li);
+        }
+    });
+})
+section.addEventListener('blur', () => {
+    setTimeout(() => {
+        sectionListElement.style.display = 'none';
+    }, 200);
+});
+sectionListElement.addEventListener('click', (event) => {
+  if (event.target.tagName === 'LI') {
+    section.value = event.target.innerText;
+    sectionListElement.style.display = 'none';
+  }
+});

@@ -603,43 +603,44 @@ START
     align-items: center;
     gap: 20px;
 }
-.form__group {
+.InputForm {
     position: relative;
     padding: 20px 0 0;
     width: 100%;
     max-width: 500px;
 }
-.addSection-container .gr_sec:last-child .form__group{
+.addSection-container .gr_sec:last-child .InputForm{
     width: 100%;
     max-width: 620px;
 }
-.addSection-container .form__group:first-child {
+.addSection-container .InputForm:first-child {
     position: relative;
     padding: 20px 0 0;
     width: 100%;
     max-width: 100px;
 }
-.form__field {
+.form_field {
     font-family: inherit;
     width: 100%;
     border: none;
     border-bottom: 2px solid #9b9b9b;
     outline: 0;
-    font-size: 17px;
+    font-size: 1.5rem;
     color: #fff;
     padding: 7px 0;
     background: transparent;
     transition: border-color 0.2s;
+    letter-spacing: 1px;
 }
-.form__field::placeholder {
+.form_field::placeholder {
     color: transparent;
 }
-.form__field:placeholder-shown ~ .form__label {
+.form_field:placeholder-shown ~ .form_label {
     font-size: 17px;
     cursor: text;
     top: 20px;
 }
-.form__label {
+.form_label {
     position: absolute;
     top: 0;
     display: block;
@@ -648,14 +649,14 @@ START
     color: #9b9b9b;
     pointer-events: none;
 }
-.form__field:focus {
+.form_field:focus {
     padding-bottom: 6px;
     font-weight: 700;
     border-width: 3px;
     border-image: linear-gradient(to right, #116399, #38caef);
     border-image-slice: 1;
 }
-.form__field:focus ~ .form__label {
+.form_field:focus ~ .form_label {
     position: absolute;
     top: 0;
     display: block;
@@ -664,11 +665,39 @@ START
     color: #38caef;
     font-weight: 700;
 }
-.form__field:required, .form__field:invalid {
+.form_field:required, .form_field:invalid {
     box-shadow: none;
 }
-.gr_sec .form__group ul{
+#newLRN{
+    letter-spacing: 1.5px;
+}
+
+.gr_sec .InputForm ul,
+.addNewStudent-gr_sec .InputForm ul,
+.addNewStudent-info .InputForm ul{
+    position: absolute;
+    list-style: none;
+    background-color: var(--blue2);
+    width: 100%;
+    justify-content: center;
+    padding: 5px;
+    gap: 5px;
+    flex-direction: column;
+    z-index: 100;
+    top: 60px;
+    border-radius: 0px 0px 10px 10px;
+
     display: none;
+}
+.InputForm ul li{
+    cursor: pointer;
+    letter-spacing: 1px;
+    padding: 5px;
+    border-radius: 5px;
+}
+.InputForm ul li:hover{
+    background-color: var(--blue4);
+
 }
 
 .addStudent-container{
@@ -708,23 +737,23 @@ START
     justify-content: center;
     gap: 20px;
 }
-.addNewStudent-info .form__group ul,
-.addNewStudent-gr_sec .form__group ul{
+.addNewStudent-info .InputForm ul,
+.addNewStudent-gr_sec .InputForm ul{
     display: none;
 }
-.addNewStudent-info .form__group:first-child{
+.addNewStudent-info .InputForm:first-child{
     max-width: 100px;
     margin-right: 50px;
 }
-.addNewStudent-gr_sec .form__group:first-child{
+.addNewStudent-gr_sec .InputForm:first-child{
     max-width: 100px;
     margin-right: 10px;
 }
-.addNewStudent-info .form__group:last-child{
+.addNewStudent-info .InputForm:last-child{
     width: 100%;
     max-width: 580px;
 }
-.addNewStudent-gr_sec .form__group:last-child{
+.addNewStudent-gr_sec .InputForm:last-child{
     width: 100%;
     max-width: 620px;
 }
