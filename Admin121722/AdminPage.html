@@ -58,18 +58,30 @@
     </header>
     <main class="hidden-Main "id="Main">
         <header class="header">
+            <div class="digital-clock">
+                <div class="hour">12</div>
+                <div class="dot">:</div>
+                <div class="min">17</div>
+                <div class="ampm-container">
+                    <div class="am">AM</div>
+                    <div class="pm">PM</div>
+                </div>
+            </div>
             <div class="admin-name">
                 <img src="Images/admin-outlined.svg" draggable="false">
                 <h1 id="role"></h1>
                 <h1 id="role-fName"></h1>
             </div>
         </header>
+        <!-- DASHBAORD -->
         <section class="dashboard">
-            <a href=""></a>
+
         </section>
+
         <section class="advisoryClass" display="none">
             
         </section>
+        <!-- STUDENTS -->
         <section class="MyStudents" display="none">
             <div class="listOfSections-container">
                 <div class="dropdown-listOfSections" id="listOfSections">
@@ -174,6 +186,10 @@
                             <input type="input" class="form_field" placeholder="" required="" id="newLRN" autocomplete="off">
                             <label class="form_label">LRN</label>
                         </div>
+                        <div class="InputForm field">
+                            <input type="date" class="form_field" min="1970-01-01" required="" id="newBirthDate" autocomplete="off">
+                            <label class="form_label white-icon">Birth Date</label>
+                        </div>
                     </div>
                     <div class="addNewStudent-gr_sec">
                           <div class="InputForm field">
@@ -210,10 +226,11 @@
                         <a>First Name:</a><input class="FName" disabled>
                         <a>Middle Name:</a><input class="MName" disabled>
                         <a>Last Name:</a><input class="LName" disabled>
-                        <a>Gender:</a><input class="gender" disabled>
                         <a>Grade Level:</a><input class="gradeLVL" disabled>
                         <a>Section:</a><input class="section" disabled>
                         <a>LRN:</a><input class="lrn" disabled>
+                        <a>Gender:</a><input class="gender" disabled>
+                        <a>Birth Date:</a><input min="1970-01-01" class="birthdate" id="birthdate" disabled>
                     </div>
                     <div class="grades-container">
                         <a>1st Period:</a><input class="period1" disabled>
@@ -246,8 +263,7 @@
                                 <th>LRN</th>
                             </tr>
                         </thead>
-                        <tbody class="TBody" id="TBody">
-                        </tbody>
+                        <tbody class="TBody" id="TBody"></tbody>
                     </table>
                 </div>
             </div>

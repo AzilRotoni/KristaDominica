@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js"; //App
-import { doc, collection, getFirestore, query, where, getDocs, setDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore//
+import { doc, onSnapshot , collection, getFirestore, query, where, getDocs, setDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js"; //Firestore//
 
 const firebaseConfig = {
     apiKey: "AIzaSyAIlhhNKiXBy2stX9HsebtxaDfB-F535LI",
@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     document.body.style.maxWidth = window.screen.width + 'px'
     closeSidebar();
-    fillTable('')
 
     //Prevent unwanted users
     let isAdmin = sessionStorage.getItem('isAdmin');
@@ -44,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 }
                 // Cache the isAdmin status
                 sessionStorage.setItem('isAdmin', isAdmin);
+                fillTable('')
             }
         }
         checkUserCredentials();
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         return tooltip;
     }
     //Navinks Selector
-    showSection('MyStudents'); //dashboard
+    showSection('dashboard'); //dashboard
     navLinks.forEach(link => {
         link.addEventListener('click', function (event) {
             event.preventDefault();
@@ -141,6 +141,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     // Title
     document.getElementById('title').textContent = `DASHBOARD - ${role} ${fname}`;
+    //===============================================================================================
+    //Dashboard 
+    //======================================================================================
+
+
 
     //===============================================================================================
     //STUDENTS 
@@ -215,205 +220,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
             });
         }
     });
-});
-            
-async function fillTable(selectedSection){
-    document.querySelector('.nameInput').removeAttribute('disabled');
-    document.querySelector('.nameInput').value = ''
-    let matchingDocumentData = [];
-    if(!sessionStorage.getItem('isStudentsCollected')){
-        sessionStorage.setItem('isStudentsCollected', 'yes')
-        const studentsCollectionRef = collection(firestore, 'MyStudents');
-        getDocs(studentsCollectionRef)
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const fullName = `${data["Last Name"]}, ${data["First Name"]} ${(data["Middle Name"] && data["Middle Name"][0] + '.') || ''}`;
-                const documentData = {
-                    id: doc.id,
-                    FName: data["First Name"],
-                    LName: data["Last Name"],
-                    MName: data["Middle Name"],
-                    gender: data["Gender"],
-                    gradeLVL: data["Grade"],
-                    section: data["Section"],
-                    LRN: data["LRN"],
-                    period1: data["1st Period"],
-                    period2: data["2nd Period"],
-                    period3: data["3rd Period"],
-                    period4: data["4th Period"],
-                    fullName: fullName.trim()
-                    };
-                    matchingDocumentData.push(documentData);
-                matchingDocumentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
-                sessionStorage.setItem('AllStudents', JSON.stringify(matchingDocumentData));
-            });
-            
-        })
-        .catch((error) =>{
-
-        })
-        .finally(() =>{
-            matchingDocumentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
-
-            const tbody = document.getElementById('TBody');
-            tbody.innerHTML = '';
-            let counter = 1;
-            matchingDocumentData.forEach((data)=>{
-                if(data.section === selectedSection){
-                        const newRow = document.createElement('tr');
-                        const numberCell = document.createElement('td');
-                        numberCell.textContent = counter++;
-                        newRow.appendChild(numberCell);
-
-                        const columns = ['fullName', 'gender', 'LRN'];
-                        
-                        columns.forEach((column) => {
-                            const cell = document.createElement('td');
-                            cell.textContent = data[column];
-                            newRow.appendChild(cell);
-                        });
-
-                        tbody.appendChild(newRow);
-                        createULelement(data.section)
-                    }
-                })
-            })
-    }else{
-        const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
-        documentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
-        const tbody = document.getElementById('TBody');
-        tbody.innerHTML = '';
-        let counter = 1;
-        documentData.forEach((data)=>{
-            if(data.section === selectedSection){
-                const newRow = document.createElement('tr');
-                const numberCell = document.createElement('td');
-                numberCell.textContent = counter++;
-                newRow.appendChild(numberCell);
-                const columns = ['fullName', 'gender', 'LRN'];
-                columns.forEach((column) => {
-                    const cell = document.createElement('td');
-                    cell.textContent = data[column];
-                    newRow.appendChild(cell);
-                });
-                tbody.appendChild(newRow);
-                createULelement(data.section)
-            }
-        })
-    }
-}
-document.addEventListener('click', (event) =>{
-    const dropdowns = document.querySelectorAll('.dropdown-listOfSections .dropdown');
-
-    dropdowns.forEach((dropdown) => {
-        const select = dropdown.querySelector('.select');
-        const caret = dropdown.querySelector('.caret');
-        const menu = dropdown.querySelector('.menu');
-
-        if (!dropdown.contains(event.target)) {
-            // Clicked outside the dropdown
-            select.classList.remove('select-clicked');
-            caret.classList.remove('caret-rotate');
-            menu.classList.remove('menu-open');
-        }
-    });
-})
-
-//Search Engine and StudentInfo
-const ulElement = document.createElement('ul');
-const findNamesDiv = document.querySelector('.find-names');
-const nameInput = document.querySelector('.nameInput');
-let currentSection;
-function updateName(x) {
-    const persons = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
-    persons.forEach((person) =>{
-        if(person.fullName === x){
-            document.querySelector('.Btn-container .Btn:last-child').style.display = 'block';
-            document.querySelector('.studentInfo-content').style.display = 'flex'
-            nameInput.value = x;
-            findNamesDiv.style.display = 'none';
-            document.querySelector('.text-info').textContent = `${person.FName}'s Information`;
-            
-            document.querySelector('.information-container .FName').value = `${person.FName}`
-            document.querySelector('.information-container .MName').value = `${person.MName}`
-            document.querySelector('.information-container .LName').value = `${person.LName}`
-            document.querySelector('.information-container .gender').value = `${person.gender}`
-            document.querySelector('.information-container .gradeLVL').value = `${person.gradeLVL}`
-            document.querySelector('.information-container .section').value = `${person.section}`
-            document.querySelector('.information-container .lrn').value = `${person.LRN}`
-            
-            document.querySelector('.grades-container .period1').value = `${person.period1}`
-            document.querySelector('.grades-container .period2').value = `${person.period2}`
-            document.querySelector('.grades-container .period3').value = `${person.period3}`
-            document.querySelector('.grades-container .period4').value = `${person.period4}`
-            const periods = [person.period1, person.period2, person.period3, person.period4];
-            const validPeriods = periods.filter(period => typeof period === 'number');
-            const countOfValidPeriods = validPeriods.length;
-            const aveGrade = countOfValidPeriods > 0 ? validPeriods.reduce((acc, period) => acc + period, 0) / countOfValidPeriods : '';
-            const formattedAveGrade = aveGrade !== '' ? (aveGrade % 1 !== 0 ? aveGrade.toFixed(3) : aveGrade.toFixed(0)) : 'N/A';
-            document.querySelector('.aveGrade').textContent = formattedAveGrade;
-        }
-    })
-}
-function createULelement(section) {
-    const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
-    findNamesDiv.innerHTML = '';
-    ulElement.innerHTML = '';
-    documentData.forEach(student => {
-        if (student.section === section) {
-            const liElement = document.createElement('li');
-            liElement.textContent = student.fullName;
-            liElement.addEventListener('click', function () {
-                updateName(student.fullName);
-            });
-            ulElement.appendChild(liElement);
-        }
-    });
-
-    findNamesDiv.appendChild(ulElement);
-    currentSection = section;
-}
-
-nameInput.addEventListener('input', () => {
-    findNamesDiv.style.display = 'flex';
-    const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
-    let enteredValue = nameInput.value.trim().toLowerCase();
-
-    const filteredStudents = documentData.filter(student =>
-        student.section === currentSection &&
-        student.fullName.toLowerCase().includes(enteredValue)
-    );
-
-    if (filteredStudents.length > 0) {
-        let arr = filteredStudents.map(student => `<li>${student.fullName}</li>`).join("");
-        ulElement.innerHTML = arr;
-
-        const exactMatch = filteredStudents.find(student => student.fullName.toLowerCase() === enteredValue);
-        if (exactMatch) {
-            updateName(exactMatch.fullName)
-        }
-    } else {
-        ulElement.innerHTML = '';
-    }
-});
-ulElement.addEventListener('click', function (event) {
-    const target = event.target;
-    if (target.tagName === 'LI') {
-        nameInput.value = target.innerText;
-        const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
-        const matchingStudent = documentData.find(student => student.fullName === target.innerText);
-        
-        if (matchingStudent) {
-            updateName(matchingStudent.fullName)
-        }
-    }
-});
-nameInput.addEventListener("blur", () => {
-    findNamesDiv.style.display = 'none';
-});
-ulElement.addEventListener('mousedown', (event) => {
-    event.preventDefault();
 });
 
 // Check screen width and redirect if below 768
@@ -571,6 +377,255 @@ function showSection(sectionClass) {
         selectedSection.style.display = 'none';
     }
 }
+//Digital Clock
+const $ = (selector) =>{
+    return document.querySelector(selector);
+}
+const hour = $('.hour')
+const dot = $('.dot')
+const min = $('.min')
+const am = $('.am')
+const pm = $('.pm')
+let showDot = true;
+function update(){
+    showDot = !showDot;
+    const now = new Date();
+    let hours = now.getHours();
+    const isPM = hours >= 12;
+    hours = hours % 12 || 12;
+
+    if (showDot) {
+        dot.classList.add('invisible')
+    }else{
+        dot.classList.remove('invisible')
+    }
+    hour.textContent = String(hours).padStart(2, '0')
+    min.textContent = String(now.getMinutes()).padStart(2, '0')
+    if (isPM) {
+        am.classList.remove('isam');
+        pm.classList.add('ispm');
+    } else {
+        am.classList.add('isam');
+        pm.classList.remove('ispm');
+    }
+}
+setInterval(update, 500)
+/* 
+===============================================================================
+            DASHBOARD
+===============================================================================
+*/
+
+
+
+/* 
+===============================================================================
+            STUDENTS
+===============================================================================
+*/
+async function fillTable(selectedSection){
+    document.querySelector('.nameInput').removeAttribute('disabled');
+    document.querySelector('.nameInput').value = ''
+    let matchingDocumentData = [];
+    if(!sessionStorage.getItem('isStudentsCollected')){
+        sessionStorage.setItem('isStudentsCollected', 'yes')
+        const studentsCollectionRef = collection(firestore, 'MyStudents');
+        getDocs(studentsCollectionRef)
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const fullName = `${data["Last Name"]}, ${data["First Name"]} ${(data["Middle Name"] && data["Middle Name"][0] + '.') || ''}`;
+                const documentData = {
+                    id: doc.id,
+                    FName: data["First Name"],
+                    LName: data["Last Name"],
+                    MName: data["Middle Name"],
+                    
+                    gradeLVL: data["Grade"],
+                    section: data["Section"],
+                    LRN: data["LRN"],
+
+                    gender: data["Gender"],
+                    birthdate: data["Birthday"],
+
+                    period1: data["1st Period"],
+                    period2: data["2nd Period"],
+                    period3: data["3rd Period"],
+                    period4: data["4th Period"],
+                    fullName: fullName.trim()
+                    };
+                    matchingDocumentData.push(documentData);
+            });
+            matchingDocumentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
+            sessionStorage.setItem('AllStudents', JSON.stringify(matchingDocumentData));
+        })
+        .catch((error) =>{
+
+        })
+        .finally(() =>{
+            matchingDocumentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+            const tbody = document.getElementById('TBody');
+            tbody.innerHTML = '';
+            let counter = 1;
+            matchingDocumentData.forEach((data)=>{
+                if(data.section === selectedSection){
+                        const newRow = document.createElement('tr');
+                        const numberCell = document.createElement('td');
+                        numberCell.textContent = counter++;
+                        newRow.appendChild(numberCell);
+
+                        const columns = ['fullName', 'gender', 'LRN'];
+                        
+                        columns.forEach((column) => {
+                            const cell = document.createElement('td');
+                            cell.textContent = data[column];
+                            newRow.appendChild(cell);
+                        });
+
+                        tbody.appendChild(newRow);
+                        createULelement(data.section)
+                    }
+                })
+            })
+    }else{
+        const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
+        documentData.sort((a, b) => a.fullName.localeCompare(b.fullName));
+        const tbody = document.getElementById('TBody');
+        tbody.innerHTML = '';
+        let counter = 1;
+        documentData.forEach((data)=>{
+            if(data.section === selectedSection){
+                const newRow = document.createElement('tr');
+                const numberCell = document.createElement('td');
+                numberCell.textContent = counter++;
+                newRow.appendChild(numberCell);
+                const columns = ['fullName', 'gender', 'LRN'];
+                columns.forEach((column) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = data[column];
+                    newRow.appendChild(cell);
+                });
+                tbody.appendChild(newRow);
+                createULelement(data.section)
+            }
+        })
+    }
+}
+document.addEventListener('click', (event) =>{
+    const dropdowns = document.querySelectorAll('.dropdown-listOfSections .dropdown');
+
+    dropdowns.forEach((dropdown) => {
+        const select = dropdown.querySelector('.select');
+        const caret = dropdown.querySelector('.caret');
+        const menu = dropdown.querySelector('.menu');
+
+        if (!dropdown.contains(event.target)) {
+            // Clicked outside the dropdown
+            select.classList.remove('select-clicked');
+            caret.classList.remove('caret-rotate');
+            menu.classList.remove('menu-open');
+        }
+    });
+})
+
+//Search Engine and StudentInfo
+const ulElement = document.createElement('ul');
+const findNamesDiv = document.querySelector('.find-names');
+const nameInput = document.querySelector('.nameInput');
+let currentSection;
+function updateName(x) {
+    const persons = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
+    persons.forEach((person) =>{
+        if(person.fullName === x){
+            document.querySelector('.Btn-container .Btn:last-child').style.display = 'block';
+            document.querySelector('.studentInfo-content').style.display = 'flex'
+            nameInput.value = x;
+            findNamesDiv.style.display = 'none';
+            document.querySelector('.text-info').textContent = `${person.FName}'s Information`;
+            
+            document.querySelector('.information-container .FName').value = `${person.FName}`
+            document.querySelector('.information-container .MName').value = `${person.MName}`
+            document.querySelector('.information-container .LName').value = `${person.LName}`
+            document.querySelector('.information-container .gradeLVL').value = `${person.gradeLVL}`
+            document.querySelector('.information-container .section').value = `${person.section}`
+            document.querySelector('.information-container .lrn').value = `${person.LRN}`
+
+            document.querySelector('.information-container .gender').value = `${person.gender}`
+            document.querySelector('.information-container .birthdate').value = new Date(person.birthdate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+            document.querySelector('.grades-container .period1').value = `${person.period1}`
+            document.querySelector('.grades-container .period2').value = `${person.period2}`
+            document.querySelector('.grades-container .period3').value = `${person.period3}`
+            document.querySelector('.grades-container .period4').value = `${person.period4}`
+            const periods = [person.period1, person.period2, person.period3, person.period4];
+            const validPeriods = periods.filter(period => typeof period === 'number');
+            const countOfValidPeriods = validPeriods.length;
+            const aveGrade = countOfValidPeriods > 0 ? validPeriods.reduce((acc, period) => acc + period, 0) / countOfValidPeriods : '';
+            const formattedAveGrade = aveGrade !== '' ? (aveGrade % 1 !== 0 ? aveGrade.toFixed(3) : aveGrade.toFixed(0)) : 'N/A';
+            document.querySelector('.aveGrade').textContent = formattedAveGrade;
+        }
+    })
+}
+function createULelement(section) {
+    const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {};
+    findNamesDiv.innerHTML = '';
+    ulElement.innerHTML = '';
+    documentData.forEach(student => {
+        if (student.section === section) {
+            const liElement = document.createElement('li');
+            liElement.textContent = student.fullName;
+            liElement.addEventListener('click', function () {
+                updateName(student.fullName);
+            });
+            ulElement.appendChild(liElement);
+        }
+    });
+
+    findNamesDiv.appendChild(ulElement);
+    currentSection = section;
+}
+
+nameInput.addEventListener('input', () => {
+    findNamesDiv.style.display = 'flex';
+    const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
+    let enteredValue = nameInput.value.trim().toLowerCase();
+
+    const filteredStudents = documentData.filter(student =>
+        student.section === currentSection &&
+        student.fullName.toLowerCase().includes(enteredValue)
+    );
+
+    if (filteredStudents.length > 0) {
+        let arr = filteredStudents.map(student => `<li>${student.fullName}</li>`).join("");
+        ulElement.innerHTML = arr;
+
+        const exactMatch = filteredStudents.find(student => student.fullName.toLowerCase() === enteredValue);
+        if (exactMatch) {
+            updateName(exactMatch.fullName)
+        }
+    } else {
+        ulElement.innerHTML = '';
+    }
+});
+ulElement.addEventListener('click', function (event) {
+    const target = event.target;
+    if (target.tagName === 'LI') {
+        nameInput.value = target.innerText;
+        const documentData = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
+        const matchingStudent = documentData.find(student => student.fullName === target.innerText);
+        
+        if (matchingStudent) {
+            updateName(matchingStudent.fullName)
+        }
+    }
+});
+nameInput.addEventListener("blur", () => {
+    findNamesDiv.style.display = 'none';
+});
+ulElement.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+});
 
 //Add Edit Button
 const editBTN = document.getElementById('editBTN');
@@ -595,6 +650,10 @@ editBTN.addEventListener('click', ()=> {
         inputElement.classList.add('open');
         inputElement.removeAttribute('disabled');
     });
+    const dateString = document.querySelector('.information-container #birthdate').value
+    let dateParts = dateString.split('/');
+    document.querySelector('.information-container #birthdate').setAttribute('type', 'date');
+    document.querySelector('.information-container #birthdate').value = (`${dateParts[2]}-${dateParts[0]}-${dateParts[1]}`);
 })
 
 const studentInfo = document.querySelector('.studentInfo-content')
@@ -645,6 +704,7 @@ editcancelBTN.addEventListener('click', () =>{
             inputElement.classList.remove('open');
             inputElement.setAttribute('disabled', '');
         });
+        document.querySelector('.information-container #birthdate').removeAttribute('type');
         updateName(nameInput.value);
         isEditBTN = false
     }else if(!isEditBTN){
@@ -691,6 +751,7 @@ editsaveBTN.addEventListener('click', async () =>{
             inputElement.classList.remove('open');
             inputElement.setAttribute('disabled', '');
         });
+        document.querySelector('.information-container #birthdate').removeAttribute('type');
 
         const students = JSON.parse(sessionStorage.getItem('AllStudents')) || {}
         students.forEach(async (student) =>{
@@ -704,10 +765,14 @@ editsaveBTN.addEventListener('click', async () =>{
                     FName: 'First Name',
                     LName: 'Last Name',
                     MName: 'Middle Name',
-                    gender: 'Gender',
+                    
                     gradeLVL: 'Grade',
                     section: 'Section',
                     LRN: 'LRN',
+
+                    gender: 'Gender',
+                    birthdate: 'Birthday',
+
                     period1: '1st Period',
                     period2: '2nd Period',
                     period3: '3rd Period',
@@ -719,10 +784,14 @@ editsaveBTN.addEventListener('click', async () =>{
                     FName: document.querySelector('.information-container .FName').value,
                     LName: document.querySelector('.information-container .LName').value,
                     MName: document.querySelector('.information-container .MName').value,
-                    gender: document.querySelector('.information-container .gender').value,
+                    
                     gradeLVL: parseInt(document.querySelector('.information-container .gradeLVL').value),
                     section: document.querySelector('.information-container .section').value,
                     LRN: document.querySelector('.information-container .lrn').value,
+
+                    gender: document.querySelector('.information-container .gender').value,
+                    birthdate: new Date(document.querySelector('.information-container #birthdate').value).toDateString(),
+
                     period1: parseInt(document.querySelector('.grades-container .period1').value),
                     period2: parseInt(document.querySelector('.grades-container .period2').value),
                     period3: parseInt(document.querySelector('.grades-container .period3').value),
@@ -838,10 +907,13 @@ editsaveBTN.addEventListener('click', async () =>{
                 'First Name' : document.querySelector('.InputForm #newFName').value,
                 'Middle Name' : document.querySelector('.InputForm #newMName').value,
                 'Last Name' : document.querySelector('.InputForm #newLName').value,
-                'LRN' : document.querySelector('.InputForm #newLRN').value,
-                'Gender' : document.querySelector('.InputForm #newGender').value,
+
                 'Grade' : parseInt(document.querySelector('.InputForm #newGradeLVL').value),
                 'Section' : document.querySelector('.InputForm #newSection').value,
+                'LRN' : document.querySelector('.InputForm #newLRN').value,
+
+                'Gender' : document.querySelector('.InputForm #newGender').value,
+                'Birthday': new Date(document.querySelector('.InputForm #newBirthDate').value).toDateString(),
 
                 '1st Period' : NaN,
                 '2nd Period' : NaN,
@@ -865,10 +937,14 @@ editsaveBTN.addEventListener('click', async () =>{
                 FName: document.querySelector('.InputForm #newFName').value,
                 LName: document.querySelector('.InputForm #newLName').value,
                 MName: document.querySelector('.InputForm #newMName').value,
-                gender: document.querySelector('.InputForm #newGender').value,
+
                 gradeLVL: parseInt(document.querySelector('.InputForm #newGradeLVL').value),
                 section: document.querySelector('.InputForm #newSection').value,
                 LRN: document.querySelector('.InputForm #newLRN').value,
+
+                gender: document.querySelector('.InputForm #newGender').value,
+                birthdate: new Date(document.querySelector('.InputForm #newBirthDate').value).toDateString(),
+
                 period1: NaN,
                 period2: NaN,
                 period3: NaN,
@@ -887,7 +963,9 @@ editsaveBTN.addEventListener('click', async () =>{
             document.querySelector('.InputForm #newMName').value = ''
             document.querySelector('.InputForm #newLName').value = ''
             document.querySelector('.InputForm #newGender').value = ''
+            document.querySelector('.InputForm #newBirthDate').value = ''
             document.querySelector('.InputForm #newLRN').value = ''
+            document.querySelector('.InputForm #newBirthDate').value = ''
             document.querySelector('.InputForm #newGradeLVL').value = ''
             document.querySelector('.InputForm #newSection').value = ''
 
@@ -1040,4 +1118,23 @@ sectionListElement.addEventListener('click', (event) => {
     section.value = event.target.innerText;
     sectionListElement.style.display = 'none';
   }
+});
+document.querySelectorAll('.information-container #birthdate, .addNewStudent-info .InputForm #newBirthDate').forEach(input => {
+  input.addEventListener('blur', (event) => {
+    let inputValue = parseInt(event.target.value);
+        if (!isNaN(inputValue)) {
+            let adjustedYear = parseInt(inputValue);
+            if (adjustedYear >= 0 && adjustedYear <= 99) {
+                adjustedYear += (adjustedYear < 50) ? 2000 : 1900;
+
+                let existingDate = event.target.valueAsDate;
+                let day = existingDate.getDate() +2;
+                let month = existingDate.getMonth() + 1;
+                let adjustedDate = new Date(`${adjustedYear}-${month}-${day}`);
+
+                adjustedDate.setFullYear(adjustedYear);
+                event.target.valueAsDate = adjustedDate;
+            }
+        }
+     })
 });
