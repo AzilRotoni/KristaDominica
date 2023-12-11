@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             sideNav.classList = 'side-navbar-container';
             document.getElementById('Main').style.display = 'block';
             document.getElementById('side-navbar-container').style.display = 'flex';
-            checkScreenWidth()
+            //checkScreenWidth()
         }, 3000); //3000
         }
     }
