@@ -124,7 +124,7 @@ function checkScreenWidth() {
         document.getElementById('particles-js').style.display = 'block'
     }
 }
-window.onload = checkScreenWidth;
+//window.onload = checkScreenWidth;
 window.addEventListener("resize", checkScreenWidth);
 
 //Show Password
