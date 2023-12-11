@@ -252,7 +252,7 @@ function checkScreenWidth() {
 
 //window.onload = checkScreenWidth;
 //window.addEventListener("resize", checkScreenWidth);
-window.addEventListener("resize", closeSidebar);
+//window.addEventListener("resize", closeSidebar);
 
 //Close Sidebar at 1000px
 window.onload = closeSidebar;
