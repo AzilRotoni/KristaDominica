@@ -22,7 +22,7 @@ const firestore = getFirestore(app);
 document.addEventListener('DOMContentLoaded', function (e) {
     e.preventDefault
 
-    document.body.style.maxWidth = window.screen.width + 'px'
+    //document.body.style.maxWidth = window.screen.width + 'px'
     closeSidebar();
 
     //Prevent unwanted users
@@ -250,8 +250,8 @@ function checkScreenWidth() {
     }
 }
 
-window.onload = checkScreenWidth;
-window.addEventListener("resize", checkScreenWidth);
+//window.onload = checkScreenWidth;
+//window.addEventListener("resize", checkScreenWidth);
 window.addEventListener("resize", closeSidebar);
 
 //Close Sidebar at 1000px
